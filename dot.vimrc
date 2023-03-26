@@ -20,18 +20,18 @@
 "    autocmd FileType python setlocal omnifunc=jedi#completions
 "endfunction
 
-"set nocompatible
-"set helplang=ja
-set shell=bash
-set nrformats=
-"filetype plugin on
-"nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
-set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set autoindent
-set smartindent
-set hlsearch
-set incsearch
-set laststatus=2
+""set nocompatible
+""set helplang=ja
+"set shell=bash
+"set nrformats=
+""filetype plugin on
+""nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+"set expandtab
+"set tabstop=4
+"set shiftwidth=4
+"set softtabstop=4
+"set autoindent
+"set smartindent
+"set hlsearch
+"set incsearch
+"set laststatus=2
