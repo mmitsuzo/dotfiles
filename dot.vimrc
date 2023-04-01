@@ -6,8 +6,17 @@
 ""Plug 'preservim/nerdtree'
 ""Plug 'vim-jp/vimdoc-ja'
 ""Plug 'davidhalter/jedi-vim', {'for': 'python'}
+"Plug 'vim-denops/denops.vim'
+"Plug 'vim-skk/denops-skkeleton.vim'
 "" List ends here. Plugins become visible to Vim after this call.
 "call plug#end()
+
+"imap <C-j> <Plug>(skkeleton-toggle)
+"cmap <C-j> <Plug>(skkeleton-toggle)
+"
+"call skkeleton#config({
+"\'eggLikeNewline':v:true
+"\})
 
 "set completeopt=menuone
 "autocmd! User jedi-vim call s:jedivim_hook()
