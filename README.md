@@ -5,5 +5,5 @@
 - .emacs.d/
 
 ## TODO
-- <C-j> exists in .tmux.conf and .vimrc, so need to be adjusted.
+- `<C-j>` exists in .tmux.conf and .vimrc, so need to be adjusted.
 
