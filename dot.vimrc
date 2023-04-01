@@ -25,10 +25,13 @@ call plug#end()
 
 imap <C-j> <Plug>(skkeleton-toggle)
 cmap <C-j> <Plug>(skkeleton-toggle)
-
+" JISYO file: https://skk-dev.github.io/dict/
+" https://skk-dev.github.io/dict/SKK-JISYO.L.gz
 call skkeleton#config({
-\'eggLikeNewline':v:true
-\})
+  \   'eggLikeNewline': v:true,
+  \   'globalJisyo': expand('~/.skk/SKK-JISYO.L'),
+  \ })
+"  \   'globalJisyo': expand('~/.cache/skk/SKK-JISYO.L'),
 
 "set completeopt=menuone
 "autocmd! User jedi-vim call s:jedivim_hook()
