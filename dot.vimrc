@@ -59,6 +59,7 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 set hlsearch
 set incsearch
 set laststatus=2
+set background=dark
 
 "let g:mapleader = "\<Space>"
 "" vim-lsp がバッファで有効になったときに実行される関数
