@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+  work:
+    build: .
+    image: img-work
+    container_name: work
+    environment:
+      - DISPLAY=$DISPLAY
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+      - PULSE_SERVER=$PULSE_SERVER
+    restart: always
+    tty: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
+      - ./vol-work:/home/user/work
+    ports:
+      - '80:80'
+      - '8000:8000'
+
+  gitbucket:
+    image: gitbucket/gitbucket
+    container_name: gitbucket
+    environment:
+      - DISPLAY=$DISPLAY
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+      - PULSE_SERVER=$PULSE_SERVER
+      - GITBUCKET_PORT=8081
+      - GITBUCKET_SECUREPORT=8443
+    restart: always
+    tty: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
+      - ./vol-gitbucket:/gitbucket
+    ports:
+      - '8081:8081'
+      - '29418:29418'
+
+  jenkins:
+    image: jenkins/jenkins:latest
+    container_name: jenkins
+    environment:
+      - DISPLAY=$DISPLAY
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+      - PULSE_SERVER=$PULSE_SERVER
+    restart: always
+    tty: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
+      - ./vol-jenkins:/var/jenkins_home
+    ports:
+      - '8080:8080'
+      - '50000:50000'
+
+networks:
+  default:
+    name: work-network
