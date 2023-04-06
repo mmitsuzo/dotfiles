@@ -61,6 +61,11 @@ set incsearch
 set laststatus=2
 set background=dark
 
+command Tab0 set tabstop=8 shiftwidth=8 softtabstop=8 noautoindent nosmartindent
+command Tab2 set tabstop=2 shiftwidth=2 softtabstop=2 autoindent smartindent
+command Tab4 set tabstop=4 shiftwidth=4 softtabstop=4 autoindent smartindent
+command Tab8 set tabstop=8 shiftwidth=8 softtabstop=8 autoindent smartindent
+
 "let g:mapleader = "\<Space>"
 "" vim-lsp がバッファで有効になったときに実行される関数
 "" バッファローカルなキーバインドやオプションを指定
