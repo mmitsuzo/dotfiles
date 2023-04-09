@@ -60,6 +60,7 @@ set hlsearch
 set incsearch
 set laststatus=2
 set background=dark
+set modeline
 
 command Tab0 set tabstop=8 shiftwidth=8 softtabstop=8 noautoindent nosmartindent
 command Tab2 set tabstop=2 shiftwidth=2 softtabstop=2 autoindent smartindent
