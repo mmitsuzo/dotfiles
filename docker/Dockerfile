@@ -9,12 +9,13 @@ ARG HOME_DIR="/home/"${USERNAME}
 ARG LANG="C.UTF-8"
 
 ENV LANG ${LANG}
-RUN apt update && apt upgrade -y
-RUN yes | unminimize
-RUN apt install -y software-properties-common
+RUN apt update && DEBIAN_FRONTEND=noninteractive apt upgrade -y
+RUN yes | DEBIAN_FRONTEND=noninteractive unminimize
+RUN DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common
 RUN add-apt-repository -y ppa:jonathonf/vim
 RUN add-apt-repository -y ppa:neovim-ppa/unstable
-RUN apt install -y apt-utils apt-file \
+RUN DEBIAN_FRONTEND=noninteractive apt install -y \
+	apt-utils apt-file \
 	sudo \
 	psmisc \
 	neovim \
@@ -32,7 +33,10 @@ RUN apt install -y apt-utils apt-file \
 	sqlite3 sqlite3-doc \
 	iproute2 iproute2-doc \
 	iputils-ping traceroute \
-	python3 python3-doc python3-venv
+	python3 python3-doc python3-venv \
+	binutils binutils-doc gcc gcc-doc g++ gdb gdb-doc make make-doc \
+	cmake cmake-doc \
+	autoconf autoconf-doc automake libtool libtool-doc m4 m4-doc
 
 #RUN apt install binutils binutils-doc gcc gcc-doc gdb gdb-doc make make-doc
 #RUN apt install texlive-latex-recommended texlive-latex-extra \
@@ -40,7 +44,8 @@ RUN apt install -y apt-utils apt-file \
 #   texlive-lang-cjk
 
 # Node.js and aws-cdk install
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs && \
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && \
+	DEBIAN_FRONTEND=noninteractive sudo apt install -y nodejs && \
 	npm install -g aws-cdk typescript
 
 RUN groupadd -g ${GID} ${GROUPNAME}
@@ -59,6 +64,22 @@ RUN echo '' >> ~/.bashrc
 RUN echo '# DENO setting' >> ~/.bashrc
 RUN echo 'export DENO_INSTALL="/home/user/.deno"' >> ~/.bashrc
 RUN echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> ~/.bashrc
+
+# Git prompt and completion
+RUN curl -fLo ~/.git-completion.bash \
+	https://raw.github.com/git/git/master/contrib/completion/git-completion.bash
+RUN curl -fLo ~/.git-prompt.sh \
+	https://raw.github.com/git/git/master/contrib/completion/git-prompt.sh
+RUN echo '' >> ~/.bashrc
+RUN echo '# Git setting' >> ~/.bashrc
+RUN echo 'if [ -f ~/.git-completion.bash ]; then source ~/.git-completion.bash; fi' >> ~/.bashrc
+RUN echo 'if [ -f ~/.git-prompt.sh ]; then source ~/.git-prompt.sh; fi' >> ~/.bashrc
+RUN echo 'PS1='\''${debian_chroot:+($debian_chroot)}\u@\h:\w$(__git_ps1)\$ '\' >> ~/.bashrc
+RUN echo 'GIT_PS1_SHOWDIRTYSTATE=true' >> ~/.bashrc
+RUN echo 'GIT_PS1_SHOWUNTRACKEDFILES=true' >> ~/.bashrc
+RUN echo 'GIT_PS1_SHOWSTASHSTATE=true' >> ~/.bashrc
+RUN echo 'GIT_PS1_SHOWUPSTREAM=auto' >> ~/.bashrc
+RUN echo '' >> ~/.bashrc
 
 # aws-cli in local
 RUN mkdir -p ${HOME_DIR}/.local/bin
@@ -83,4 +104,12 @@ COPY --chown=user:user dotfiles/dot.tmux.conf ${HOME_DIR}/.tmux.conf
 COPY --chown=user:user dotfiles/dot.emacs.d ${HOME_DIR}/.emacs.d
 # skk dictionary for skkeleton
 RUN mkdir -p ~/.skk && cd ~/.skk && wget https://skk-dev.github.io/dict/SKK-JISYO.L.gz && gunzip SKK-JISYO.L.gz
+
+# install C/C++ unit test library
+COPY --chown=user:user ./script/install-cpputest.sh ${HOME_DIR}/.local/bin/
+RUN ${HOME_DIR}/.local/bin/install-cpputest.sh
+COPY --chown=user:user ./script/install-cunit.sh ${HOME_DIR}/.local/bin/
+RUN ${HOME_DIR}/.local/bin/install-cunit.sh
+COPY --chown=user:user ./script/install-googletest.sh ${HOME_DIR}/.local/bin/
+RUN ${HOME_DIR}/.local/bin/install-googletest.sh
 
