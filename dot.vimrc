@@ -1,51 +1,92 @@
 " Plugins will be downloaded under the specified directory.
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " Declare the list of plugins.
+Plug 'preservim/nerdtree'
 "Plug 'tpope/vim-sensible'
 "Plug 'junegunn/seoul256.vim'
-Plug 'preservim/nerdtree'
 "Plug 'vim-jp/vimdoc-ja'
-"Plug 'davidhalter/jedi-vim', {'for': 'python'}
-Plug 'vim-denops/denops.vim'
-Plug 'vim-skk/denops-skkeleton.vim'
-"Plug 'prabirshrestha/vim-lsp'
+"Plug 'davidhalter/jedi-vim'
+"Plug 'vim-denops/denops.vim'
+"Plug 'vim-skk/denops-skkeleton.vim'
+Plug 'vim-skk/eskk.vim'
+"############################
+"### asyncomplete setting ###
+"############################
 "Plug 'mattn/vim-lsp-settings'
-"Plug 'mattn/efm-langserver'
-"Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/vim-lsp'
 "Plug 'prabirshrestha/asyncomplete.vim'
 "Plug 'prabirshrestha/asyncomplete-lsp.vim'
-"Plug 'hrsh7th/vim-vsnip'
-"Plug 'hrsh7th/vim-vsnip-integ'
-"Plug 'rafamadriz/friendly-snippets'
-"Plug 'editorconfig/editorconfig-vim'
-"Plug 'tpope/vim-commentary'
-"Plug 'cohama/lexima.vim'
+"###########
+"### ddc ###
+"###########
+"Plug 'Shougo/ddc.vim'
+"Plug 'shun/ddc-vim-lsp'
+"###########
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
-imap <C-j> <Plug>(skkeleton-toggle)
-cmap <C-j> <Plug>(skkeleton-toggle)
-" JISYO file: https://skk-dev.github.io/dict/
-" https://skk-dev.github.io/dict/SKK-JISYO.L.gz
-call skkeleton#config({
-  \   'eggLikeNewline': v:true,
-  \   'globalJisyo': expand('~/.skk/SKK-JISYO.L'),
-  \ })
-"  \   'globalJisyo': expand('~/.cache/skk/SKK-JISYO.L'),
-
-"set completeopt=menuone
-"autocmd! User jedi-vim call s:jedivim_hook()
-"function! s:jedivim_hook()
-"    let g:jedi#auto_initialization    = 0
-"    let g:jedi#auto_vim_configuration = 0
-"    let g:jedi#popup_on_dot           = 0
-"    let g:jedi#popup_select_first     = 0
-"    let g:jedi#show_call_signatures   = 0
-"    autocmd FileType python setlocal omnifunc=jedi#completions
+""############################
+""### asyncomplete setting ###
+""############################
+"inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+""inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
+"
+"imap <c-space> <Plug>(asyncomplete_force_refresh)
+"" For Vim 8 (<c-@> corresponds to <c-space>):
+"" imap <c-@> <Plug>(asyncomplete_force_refresh)
+"
+"let g:asyncomplete_auto_popup = 0
+"
+"function! s:check_back_space() abort
+"    let col = col('.') - 1
+"    return !col || getline('.')[col - 1]  =~ '\s'
 "endfunction
+"
+"inoremap <silent><expr> <TAB>
+"  \ pumvisible() ? "\<C-n>" :
+"  \ <SID>check_back_space() ? "\<TAB>" :
+"  \ asyncomplete#force_refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"
+"" allow modifying the completeopt variable, or it will
+"" be overridden all the time
+"let g:asyncomplete_auto_completeopt = 0
+"
+"set completeopt=menuone,noinsert,noselect,preview
+"
+"autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+""############################
 
-""set nocompatible
-""set helplang=ja
+"##################
+"### skkeleton ###
+"##################
+"imap <C-j> <Plug>(skkeleton-toggle)
+"cmap <C-j> <Plug>(skkeleton-toggle)
+""" JISYO file: https://skk-dev.github.io/dict/
+""" https://skk-dev.github.io/dict/SKK-JISYO.L.gz
+"call skkeleton#config({
+"  \   'eggLikeNewline': v:true,
+"  \   'globalJisyo': expand('~/.skk/SKK-JISYO.L'),
+"  \ })
+"##################
+
+"############
+"### eskk ###
+"############
+"if !filereadable(expand('~/.skk/SKK-JISYO.L'))
+"  call mkdir('~/.skk', 'p')
+"  call system('cd ~/.skk/ && wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && gzip -d SKK-JISYO.L.gz')
+"endif
+let g:eskk#directory = "~/.skk"
+let g:eskk#dictionary = { 'path': "~/.skk/my_jisyo", 'sorted': 1, 'encoding': 'utf-8',}
+let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
+let g:eskk#egg_like_newline = 1
+"############
+
+"set nocompatible
+"set helplang=ja
 "set shell=bash
 "set nrformats=
 filetype plugin on
@@ -66,82 +107,4 @@ command Tab0 set tabstop=8 shiftwidth=8 softtabstop=8 noautoindent nosmartindent
 command Tab2 set tabstop=2 shiftwidth=2 softtabstop=2 autoindent smartindent
 command Tab4 set tabstop=4 shiftwidth=4 softtabstop=4 autoindent smartindent
 command Tab8 set tabstop=8 shiftwidth=8 softtabstop=8 autoindent smartindent
-
-"let g:mapleader = "\<Space>"
-"" vim-lsp がバッファで有効になったときに実行される関数
-"" バッファローカルなキーバインドやオプションを指定
-"" See: https://mattn.kaoriya.net/software/vim/20191231213507.htm
-"function! s:on_lsp_buffer_enabled() abort
-"    if &ft =~ 'ctrlp\|dirvish'
-"        return
-"    endif
-"    setlocal omnifunc=lsp#complete
-"    setlocal signcolumn=yes
-"    nmap <buffer> <leader>a <plug>(lsp-code-action)
-"    nmap <buffer> <leader>l <plug>(lsp-code-lens)
-"    nmap <buffer> <leader>L <plug>(lsp-document-diagnostics)
-"    " nmap <buffer> <leader>d <plug>(lsp-decralation)
-"    nmap <buffer> <leader>D <plug>(lsp-definition)
-"    nmap <buffer> <leader>y <plug>(lsp-type-definition)
-"    nmap <buffer> <leader>i <plug>(lsp-implementation)
-"    nmap <buffer> <leader>r <plug>(lsp-references)
-"    nmap <buffer> <leader>R <plug>(lsp-rename)
-"    nmap <buffer> <leader>S <plug>(lsp-document-symbol)
-"    nmap <silent><buffer> <C-j> <plug>(lsp-next-diagnostic)
-"    nmap <silent><buffer> <C-k> <plug>(lsp-previous-diagnostic)
-"
-"    if &ft =~ 'typescript\|javascript'
-"        nmap <buffer> <leader>f :LspDocumentFormatSync --server=efm-langserver<CR>
-"        xmap <buffer> <leader>f :LspDocumentRangeFormatSync --server=efm-langserver<CR>
-"    else
-"        nmap <buffer> <leader>f <plug>(lsp-document-format)
-"        xmap <buffer> <leader>f <plug>(lsp-document-range-format)
-"    endif
-"endfunction
-"augroup lsp_install
-"  au!
-"  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-"augroup END
-"" vim-lsp デバッグログの出力
-"command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
-"
-"" lightline.vim のステータスラインに vim-lsp diagnostics の数を表示する
-"" augroup LightLineOnLSP
-""   autocmd!
-""   autocmd User lsp_diagnostics_updated call lightline#update()
-"" augroup END
-"
-"let g:lsp_diagnostics_echo_cursor = 1
-"
-"" vim-lsp 経由でバッファの保存前にフォーマットをかける
-"" See: https://zenn.dev/yami_beta/articles/589c567199ea28
-"augroup MyLSPTypeScript
-"    autocmd!
-"    autocmd BufWritePre *.ts,*.tsx call execute('LspDocumentFormatSync --server=efm-langserver')
-"augroup END
-"
-"let g:lsp_settings = {
-"    \ 'efm-langserver': {
-"        \ 'disabled': v:false
-"    \ },
-"\ }
-"
-"let g:asyncomplete_popup_delay = 200
-"
-"let g:vsnip_snippet_dir = expand($XDG_CONFIG_HOME . '/vsnip')
-"" 補完のポップアップメニュー表示中
-""   <CR> で候補を確定
-"inoremap <expr><CR> pumvisible() ? "\<c-y>" : "\<cr>"
-"" :h vsnip-mapping
-"" Expand
-"imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-"smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-"" Expand or jump
-"imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-"smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-"" Jump forward or backward
-"imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-"smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-"imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-"smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 
