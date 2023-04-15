@@ -1,3 +1,29 @@
+"set nocompatible
+"set helplang=ja
+"set shell=bash
+"set nrformats=
+filetype plugin on
+nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+set hlsearch
+set incsearch
+set laststatus=2
+set background=dark
+set modeline
+"set omnifunc=syntaxcomplete#Complete
+"set omnifunc=lsp#complete
+set wildmenu
+set wildmode=full
+
+command Tab0 set tabstop=8 shiftwidth=8 softtabstop=8 noautoindent nosmartindent noexpandtab
+command Tab2 set tabstop=2 shiftwidth=2 softtabstop=2 autoindent smartindent expandtab
+command Tab4 set tabstop=4 shiftwidth=4 softtabstop=4 autoindent smartindent expandtab
+command Tab8 set tabstop=8 shiftwidth=8 softtabstop=8 autoindent smartindent expandtab
+command T0 Tab0
+command T2 Tab2
+command T4 Tab4
+command T8 Tab8
+
+"################################################################
 " Plugins will be downloaded under the specified directory.
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " Declare the list of plugins.
@@ -5,72 +31,92 @@ Plug 'preservim/nerdtree'
 "Plug 'tpope/vim-sensible'
 "Plug 'junegunn/seoul256.vim'
 "Plug 'vim-jp/vimdoc-ja'
-"Plug 'davidhalter/jedi-vim'
-"Plug 'vim-denops/denops.vim'
-"Plug 'vim-skk/denops-skkeleton.vim'
 Plug 'vim-skk/eskk.vim'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+"Plug 'OmniSharp/omnisharp-vim'
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
+"################################################################
+
+"#######################
+"### vim-lsp setting ###
+"#######################
+"let g:lsp_auto_enable = 0
+"let g:lsp_auto_enable = 1
+"let g:lsp_document_highlight_enabled = 0
+let g:lsp_diagnostics_enabled = 0
+"let g:lsp_diagnostics_echo_cursor = 0
+set signcolumn=no
+let g:lsp_log_verbose = 0
+let g:lsp_log_file = ""
+
+function! s:on_lsp_buffer_enabled() abort
+  setlocal omnifunc=lsp#complete
+"  setlocal signcolumn=yes
+  if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gs <plug>(lsp-document-symbol-search)
+  nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> gt <plug>(lsp-type-definition)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+  nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+  nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+  nmap <buffer> K <plug>(lsp-hover)
+"  nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+"  nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
+
+  let g:lsp_format_sync_timeout = 1000
+  autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+
+  " refer to doc to add more commands
+endfunction
+
+augroup lsp_install
+  au!
+  " call s:on_lsp_buffer_enabled only for languages that has the
+  " server registered.
+  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+"#######################
+
+
 "############################
 "### asyncomplete setting ###
 "############################
-"Plug 'mattn/vim-lsp-settings'
-"Plug 'prabirshrestha/vim-lsp'
-"Plug 'prabirshrestha/asyncomplete.vim'
-"Plug 'prabirshrestha/asyncomplete-lsp.vim'
-"###########
-"### ddc ###
-"###########
-"Plug 'Shougo/ddc.vim'
-"Plug 'shun/ddc-vim-lsp'
-"###########
-" List ends here. Plugins become visible to Vim after this call.
-call plug#end()
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+"inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
 
-""############################
-""### asyncomplete setting ###
-""############################
-"inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
-""inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
-"
-"imap <c-space> <Plug>(asyncomplete_force_refresh)
-"" For Vim 8 (<c-@> corresponds to <c-space>):
-"" imap <c-@> <Plug>(asyncomplete_force_refresh)
-"
-"let g:asyncomplete_auto_popup = 0
-"
-"function! s:check_back_space() abort
-"    let col = col('.') - 1
-"    return !col || getline('.')[col - 1]  =~ '\s'
-"endfunction
-"
-"inoremap <silent><expr> <TAB>
-"  \ pumvisible() ? "\<C-n>" :
-"  \ <SID>check_back_space() ? "\<TAB>" :
-"  \ asyncomplete#force_refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"
-"" allow modifying the completeopt variable, or it will
-"" be overridden all the time
-"let g:asyncomplete_auto_completeopt = 0
-"
-"set completeopt=menuone,noinsert,noselect,preview
-"
-"autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-""############################
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+" For Vim 8 (<c-@> corresponds to <c-space>):
+" imap <c-@> <Plug>(asyncomplete_force_refresh)
 
-"##################
-"### skkeleton ###
-"##################
-"imap <C-j> <Plug>(skkeleton-toggle)
-"cmap <C-j> <Plug>(skkeleton-toggle)
-""" JISYO file: https://skk-dev.github.io/dict/
-""" https://skk-dev.github.io/dict/SKK-JISYO.L.gz
-"call skkeleton#config({
-"  \   'eggLikeNewline': v:true,
-"  \   'globalJisyo': expand('~/.skk/SKK-JISYO.L'),
-"  \ })
-"##################
+let g:asyncomplete_auto_popup = 0
+let g:asyncomplete_auto_completeopt = 0
+set completeopt=menuone,noinsert,noselect,preview
+inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
+inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+let g:OmniSharp_server_use_net6 = 1
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ asyncomplete#force_refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"############################
+
 
 "############
 "### eskk ###
@@ -84,27 +130,4 @@ let g:eskk#dictionary = { 'path': "~/.skk/my_jisyo", 'sorted': 1, 'encoding': 'u
 let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
 let g:eskk#egg_like_newline = 1
 "############
-
-"set nocompatible
-"set helplang=ja
-"set shell=bash
-"set nrformats=
-filetype plugin on
-nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
-"set expandtab
-"set tabstop=4
-"set shiftwidth=4
-"set softtabstop=4
-"set autoindent
-"set smartindent
-set hlsearch
-set incsearch
-set laststatus=2
-set background=dark
-set modeline
-
-command Tab0 set tabstop=8 shiftwidth=8 softtabstop=8 noautoindent nosmartindent
-command Tab2 set tabstop=2 shiftwidth=2 softtabstop=2 autoindent smartindent
-command Tab4 set tabstop=4 shiftwidth=4 softtabstop=4 autoindent smartindent
-command Tab8 set tabstop=8 shiftwidth=8 softtabstop=8 autoindent smartindent
 
