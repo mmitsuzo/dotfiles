@@ -14,14 +14,10 @@ set modeline
 set wildmenu
 set wildmode=full
 
-command Tab0 set tabstop=8 shiftwidth=8 softtabstop=8 noautoindent nosmartindent noexpandtab
-command Tab2 set tabstop=2 shiftwidth=2 softtabstop=2 autoindent smartindent expandtab
-command Tab4 set tabstop=4 shiftwidth=4 softtabstop=4 autoindent smartindent expandtab
-command Tab8 set tabstop=8 shiftwidth=8 softtabstop=8 autoindent smartindent expandtab
-command T0 Tab0
-command T2 Tab2
-command T4 Tab4
-command T8 Tab8
+command T0 set ts=8 sw=8 sts=8 noai nosi nocin noet
+command T2 set ts=2 sw=2 sts=2 ai si cin cino=(0,W2,g0,i0 et
+command T4 set ts=4 sw=4 sts=4 ai si cin cino=(0,W4,g0,i0 et
+command T8 set ts=8 sw=8 sts=8 ai si cin cino=(0,W8,g0,i0 et
 
 "################################################################
 " Plugins will be downloaded under the specified directory.

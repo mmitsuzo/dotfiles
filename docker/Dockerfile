@@ -9,6 +9,7 @@ ARG HOME_DIR="/home/"${USERNAME}
 ARG LANG="C.UTF-8"
 
 ENV LANG ${LANG}
+ENV TZ=Asia/Tokyo
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt upgrade -y
 RUN yes | DEBIAN_FRONTEND=noninteractive unminimize
 RUN DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common
@@ -18,8 +19,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
 	apt-utils apt-file \
 	sudo \
 	psmisc \
-	neovim \
 	vim vim-doc vim-scripts \
+	neovim \
 	tmux \
 	universal-ctags \
 	wget curl \
@@ -38,8 +39,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
 	cmake cmake-doc \
 	autoconf autoconf-doc automake libtool libtool-doc m4 m4-doc
 
-#RUN apt install binutils binutils-doc gcc gcc-doc gdb gdb-doc make make-doc
-#RUN apt install texlive-latex-recommended texlive-latex-extra \
+#RUN apt install -y texlive-latex-recommended texlive-latex-extra \
 #   texlive-fonts-recommended texlive-fonts-extra texlive-lang-japanese \
 #   texlive-lang-cjk
 
@@ -59,11 +59,11 @@ ENV LANG ${LANG}
 ENV PATH ${PATH}:${HOME_DIR}/.local/bin
 
 # Install DENO
-RUN curl -fsSL https://deno.land/x/install/install.sh | sh
-RUN echo '' >> ~/.bashrc
-RUN echo '# DENO setting' >> ~/.bashrc
-RUN echo 'export DENO_INSTALL="/home/user/.deno"' >> ~/.bashrc
-RUN echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> ~/.bashrc
+#RUN curl -fsSL https://deno.land/x/install/install.sh | sh
+#RUN echo '' >> ~/.bashrc
+#RUN echo '# DENO setting' >> ~/.bashrc
+#RUN echo 'export DENO_INSTALL="/home/user/.deno"' >> ~/.bashrc
+#RUN echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> ~/.bashrc
 
 # Git prompt and completion
 RUN curl -fLo ~/.git-completion.bash \
@@ -112,4 +112,6 @@ COPY --chown=user:user ./script/install-cunit.sh ${HOME_DIR}/.local/bin/
 RUN ${HOME_DIR}/.local/bin/install-cunit.sh
 COPY --chown=user:user ./script/install-googletest.sh ${HOME_DIR}/.local/bin/
 RUN ${HOME_DIR}/.local/bin/install-googletest.sh
+COPY --chown=user:user ./script/install-unity.sh ${HOME_DIR}/.local/bin/
+RUN ${HOME_DIR}/.local/bin/install-unity.sh
 
