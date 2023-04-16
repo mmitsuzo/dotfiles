@@ -9,7 +9,7 @@ ARG HOME_DIR="/home/"${USERNAME}
 ARG LANG="C.UTF-8"
 
 ENV LANG ${LANG}
-ENV TZ=Asia/Tokyo
+ENV TZ Asia/Tokyo
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt upgrade -y
 RUN yes | DEBIAN_FRONTEND=noninteractive unminimize
 RUN DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common
@@ -86,7 +86,7 @@ RUN mkdir -p ${HOME_DIR}/.local/bin
 RUN mkdir -p ${HOME_DIR}/.local/src
 RUN cd ${HOME_DIR}/.local/src && \
 	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-	cd ${HOME_DIR}/.local/src && unzip awscliv2.zip && \
+	cd ${HOME_DIR}/.local/src && unzip -q awscliv2.zip && \
 	./aws/install -i ${HOME_DIR}/.local/aws-cli -b ${HOME_DIR}/.local/bin
 
 # vim-plug for Vim
