@@ -7,12 +7,15 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 set hlsearch
 set incsearch
 set laststatus=2
-set background=dark
 set modeline
 "set omnifunc=syntaxcomplete#Complete
-"set omnifunc=lsp#complete
 set wildmenu
 set wildmode=full
+
+set background=dark
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 command T0 set ts=8 sw=8 sts=8 noai nosi nocin noet
 command T2 set ts=2 sw=2 sts=2 ai si cin cino=(0,W2,g0,i0 et
@@ -28,14 +31,24 @@ Plug 'preservim/nerdtree'
 "Plug 'junegunn/seoul256.vim'
 "Plug 'vim-jp/vimdoc-ja'
 Plug 'vim-skk/eskk.vim'
+"Plug 'tpope/vim-surround'
 Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 "Plug 'OmniSharp/omnisharp-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+"Plug 'nathanaelkane/vim-indent-guides'
+"Plug 'itchyny/lightline.vim'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
+
+"let g:airline#extensions#tabline#formatter = 'unique_tail'
+"let g:indent_guides_enable_on_vim_startup = 1
 
 "#######################
 "### vim-lsp setting ###
