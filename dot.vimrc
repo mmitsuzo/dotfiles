@@ -11,6 +11,10 @@ set modeline
 "set omnifunc=syntaxcomplete#Complete
 set wildmenu
 set wildmode=full
+"set number
+set ruler
+"set cursorline
+"set cursorcolumn
 
 set background=dark
 set termguicolors
@@ -36,6 +40,8 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
 "Plug 'OmniSharp/omnisharp-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -47,6 +53,9 @@ Plug 'airblade/vim-gitgutter'
 call plug#end()
 "################################################################
 
+"let g:airline_theme='<theme>'
+"let g:airline_theme='luna'
+"let g:airline_powerline_fonts = 1
 "let g:airline#extensions#tabline#formatter = 'unique_tail'
 "let g:indent_guides_enable_on_vim_startup = 1
 
@@ -56,15 +65,15 @@ call plug#end()
 "let g:lsp_auto_enable = 0
 "let g:lsp_auto_enable = 1
 "let g:lsp_document_highlight_enabled = 0
-let g:lsp_diagnostics_enabled = 0
+"let g:lsp_diagnostics_enabled = 0
 "let g:lsp_diagnostics_echo_cursor = 0
-set signcolumn=no
+"set signcolumn=no
 let g:lsp_log_verbose = 0
 let g:lsp_log_file = ""
 
 function! s:on_lsp_buffer_enabled() abort
   setlocal omnifunc=lsp#complete
-"  setlocal signcolumn=yes
+  setlocal signcolumn=yes
   if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
   nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> gs <plug>(lsp-document-symbol-search)
@@ -106,13 +115,13 @@ imap <c-space> <Plug>(asyncomplete_force_refresh)
 " For Vim 8 (<c-@> corresponds to <c-space>):
 " imap <c-@> <Plug>(asyncomplete_force_refresh)
 
-let g:asyncomplete_auto_popup = 0
-let g:asyncomplete_auto_completeopt = 0
+"let g:asyncomplete_auto_popup = 0
+"let g:asyncomplete_auto_completeopt = 0
 set completeopt=menuone,noinsert,noselect,preview
 inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
 inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-let g:OmniSharp_server_use_net6 = 1
+"let g:OmniSharp_server_use_net6 = 1
 
 function! s:check_back_space() abort
     let col = col('.') - 1
