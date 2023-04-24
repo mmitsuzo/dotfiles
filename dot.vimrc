@@ -1,5 +1,6 @@
 " vim: set sw=2 ts=2 sts=2 et tw=78 :
 let mapleader = "\<Space>"
+"set clipboard=unnamed,unnamedplug
 "set nocompatible
 "set helplang=ja
 "set shell=bash
@@ -29,9 +30,9 @@ set autoindent
 set pastetoggle=<F12>
 "set nojoinspaces
 set signcolumn=no
-"set nolist
-set list
-set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:_
+set nolist
+"set list
+set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:␣
 
 set background=dark
 set termguicolors
@@ -134,6 +135,7 @@ smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l
 "let g:vsnip_filetypes.typescriptreact = ['typescript']
 "#####################
 
+
 "##################################
 "###  mix ayncomplete and vsnip ###
 "##################################
@@ -228,4 +230,9 @@ let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encod
 let g:eskk#egg_like_newline = 1
 "############
 
+
+"#####################
+"### private macro ###
+"#####################
+command NT :NERDTreeToggle
 
