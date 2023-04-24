@@ -1,4 +1,5 @@
 " vim: set sw=2 ts=2 sts=2 et tw=78 :
+let mapleader = "\<Space>"
 "set nocompatible
 "set helplang=ja
 "set shell=bash
@@ -7,6 +8,7 @@ filetype plugin indent on
 syntax on
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 "nmap <silent> // :nohlsearch<CR>
+"nnoremap <silent> <leader>/ :nohlsearch<CR>
 set hlsearch
 set incsearch
 set laststatus=2
@@ -25,7 +27,7 @@ set autoindent
 "set smartindent
 "set cindent
 set pastetoggle=<F12>
-set nojoinspaces
+"set nojoinspaces
 set signcolumn=no
 "set nolist
 set list
@@ -38,8 +40,6 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let &t_SI.="\e[5 q" "SI = INSERT mode
 let &t_SR.="\e[4 q" "SR = REPLACE mode
 let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
-
-"let mapleader = "\<Space>"
 
 "command T0 set ts=8 sw=8 sts=8 noai nosi nocin noet
 "command T2 set ts=2 sw=2 sts=2 ai si cin cino=(0,W2,g0,i0 et
@@ -71,9 +71,9 @@ Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'prabirshrestha/asyncomplete-buffer.vim'
 Plug 'prabirshrestha/vsnip-snippets'
-"Plug 'hrsh7th/vim-vsnip'
-"Plug 'hrsh7th/vim-vsnip-integ'
-"Plug 'rafamadriz/friendly-snippets'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'rafamadriz/friendly-snippets'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 "Plug 'tpope/vim-sensible'
@@ -97,15 +97,49 @@ silent! colorscheme solarized8
 "############################
 "let g:asyncomplete_auto_popup = 1
 "let g:asyncomplete_auto_completeopt = 1
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
-"inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
+"inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() : "\<CR>"
+"inoremap <expr> <CR>    pumvisible() ? asyncomplete#close_popup() . "\<CR>" : "\<CR>"
 inoremap <expr> <C-y>   pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
 inoremap <expr> <C-e>   pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
 imap <c-space> <Plug>(asyncomplete_force_refresh)
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 "############################
+
+
+"#####################
+"### vsnip setting ###
+"#####################
+" Expand
+"imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+"smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+" Expand or jump
+imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+" Jump forward or backward
+"imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+"smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+"imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+"smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
+" See https://github.com/hrsh7th/vim-vsnip/pull/50
+"nmap        s   <Plug>(vsnip-select-text)
+"xmap        s   <Plug>(vsnip-select-text)
+"nmap        S   <Plug>(vsnip-cut-text)
+"xmap        S   <Plug>(vsnip-cut-text)
+" If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
+"let g:vsnip_filetypes = {}
+"let g:vsnip_filetypes.javascriptreact = ['javascript']
+"let g:vsnip_filetypes.typescriptreact = ['typescript']
+"#####################
+
+"##################################
+"###  mix ayncomplete and vsnip ###
+"##################################
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : "\<S-Tab>"
+"##################################
 
 
 "#######################
@@ -160,6 +194,24 @@ augroup configure_lsp
   au!
   autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
+
+" custom toggle
+function! AsyncompleteToggle() abort
+    if b:asyncomplete_enable == 1
+        let b:asyncomplete_enable = 0
+        let b:asyncomplete_auto_popup = 0
+        let b:asyncomplete_auto_completeopt = 0
+        let b:lsp_diagnostics_enabled = 0
+        setlocal signcolumn=no
+    else
+        let b:asyncomplete_enable = 1
+        let b:asyncomplete_auto_popup = 1
+        let b:asyncomplete_auto_completeopt = 1
+        let b:lsp_diagnostics_enabled = 1
+        setlocal signcolumn=yes
+    endif
+endfunction
+command AT call AsyncompleteToggle()
 "#######################
 
 
@@ -176,30 +228,4 @@ let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encod
 let g:eskk#egg_like_newline = 1
 "############
 
-" NOTE: You can use other key to expand snippet.
-" Expand
-"imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-"smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-
-" Expand or jump
-"imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-"smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-
-" Jump forward or backward
-"imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-"smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-"imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-"smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
-" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
-" See https://github.com/hrsh7th/vim-vsnip/pull/50
-"nmap        s   <Plug>(vsnip-select-text)
-"xmap        s   <Plug>(vsnip-select-text)
-"nmap        S   <Plug>(vsnip-cut-text)
-"xmap        S   <Plug>(vsnip-cut-text)
-
-" If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
-"let g:vsnip_filetypes = {}
-"let g:vsnip_filetypes.javascriptreact = ['javascript']
-"let g:vsnip_filetypes.typescriptreact = ['typescript']
 

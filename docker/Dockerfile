@@ -56,6 +56,7 @@ USER ${USERNAME}
 WORKDIR ${HOME_DIR}
 ENV HOME ${HOME_DIR}
 ENV LANG ${LANG}
+#ENV PATH ${PATH}:${HOME_DIR}/.local/bin:${HOME_DIR}/.local/go/bin:${HOME_DIR}/go/bin
 ENV PATH ${PATH}:${HOME_DIR}/.local/bin
 
 # Install DENO
@@ -96,14 +97,18 @@ COPY --chown=user:user dotfiles/dot.vimrc ${HOME_DIR}/.vimrc
 # vim-plug for Neovim
 RUN curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-RUN mkdir -p ~/.config/nvim
-COPY --chown=user:user dotfiles/dot.vimrc ${HOME_DIR}/.config/nvim/init.vim
+RUN mkdir -p ~/.config/nvim && echo 'source ~/.vimrc' > ~/.config/nvim/init.vim
 # tmux config
 COPY --chown=user:user dotfiles/dot.tmux.conf ${HOME_DIR}/.tmux.conf
 # emacs config
 COPY --chown=user:user dotfiles/dot.emacs.d ${HOME_DIR}/.emacs.d
 # skk dictionary for skkeleton
 RUN mkdir -p ~/.skk && cd ~/.skk && wget https://skk-dev.github.io/dict/SKK-JISYO.L.gz && gunzip SKK-JISYO.L.gz
+
+# install Go
+ENV PATH ${PATH}:${HOME_DIR}/.local/go/bin:${HOME_DIR}/go/bin
+COPY --chown=user:user ./script/install-go.sh ${HOME_DIR}/.local/bin/
+RUN ${HOME_DIR}/.local/bin/install-go.sh
 
 # install C/C++ unit test library
 COPY --chown=user:user ./script/install-cpputest.sh ${HOME_DIR}/.local/bin/
