@@ -9,7 +9,8 @@ ARG HOME_DIR="/home/"${USERNAME}
 ARG LANG="C.UTF-8"
 
 ENV LANG ${LANG}
-ENV TZ Asia/Tokyo
+#ENV TZ Asia/Tokyo
+ENV TZ JST-9
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt upgrade -y
 RUN yes | DEBIAN_FRONTEND=noninteractive unminimize
 RUN DEBIAN_FRONTEND=noninteractive apt install -y software-properties-common
@@ -36,6 +37,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
 	iputils-ping traceroute \
 	python3 python3-doc python3-venv \
 	binutils binutils-doc gcc gcc-doc g++ gdb gdb-doc make make-doc \
+	libncurses-dev \
 	cmake cmake-doc \
 	autoconf autoconf-doc automake libtool libtool-doc m4 m4-doc
 

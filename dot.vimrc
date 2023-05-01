@@ -1,5 +1,6 @@
 " vim: set sw=2 ts=2 sts=2 et tw=78 :
 let mapleader = "\<Space>"
+"runtime! ftplugin/man.vim
 "set clipboard=unnamed,unnamedplug
 "set nocompatible
 "set helplang=ja
@@ -21,10 +22,10 @@ set number
 "set ruler
 "set cursorline
 "set cursorcolumn
-set mouse=a
+"set mouse=a
 set noerrorbells visualbell t_vb=
 set showcmd
-set autoindent
+"set autoindent
 "set smartindent
 "set cindent
 set pastetoggle=<F12>
@@ -48,12 +49,38 @@ let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
 "command TT2 set ts=2 sw=2 sts=2 ai si cin cino=(0,W2,g0,i0 noet
 "command TT4 set ts=4 sw=4 sts=4 ai si cin cino=(0,W4,g0,i0 noet
 "command TT8 set ts=8 sw=8 sts=8 ai si cin cino=(0,W8,g0,i0 noet
-command T0 set ts=8 sw=8 sts=8 noai nosi nocin noet
-command T2 set ts=2 sw=2 sts=2 ai et
-command T4 set ts=4 sw=4 sts=4 ai et
-command TT2 set ts=2 sw=2 sts=2 ai noet
-command TT4 set ts=4 sw=4 sts=4 ai noet
-command TT8 set ts=8 sw=8 sts=8 ai noet
+command T0 set ts=8 sw=8 sts=8 noet
+command T2 set ts=2 sw=2 sts=2 et
+command T4 set ts=4 sw=4 sts=4 et
+command T8 set ts=8 sw=8 sts=8 et
+command TT0 set ts=8 sw=8 sts=8 noet
+command TT2 set ts=2 sw=2 sts=2 noet
+command TT4 set ts=4 sw=4 sts=4 noet
+command TT8 set ts=8 sw=8 sts=8 noet
+function! InsertModeline(expand_flag, width, ...)
+  "TODO: filetype should be checked to determine comment_str...
+  let l:comment_begin = a:0 > 0 ? a:000[0] . ' ' : ''
+  let l:comment_end   = a:0 > 1 ? ' ' . a:000[1] : ''
+  let l:modeline = l:comment_begin
+  let l:modeline .= 'vim: set'
+  let l:modeline .= ' ts=' . a:width
+  let l:modeline .= ' sw=' . a:width
+  let l:modeline .= ' sts=' . a:width
+  "let l:modeline .= ' ai'
+  let l:modeline .= a:expand_flag ? ' et' : ' noet'
+  let l:modeline .= ':'
+  let l:modeline .= l:comment_end
+  let l:cmd = 'T' . (a:expand_flag ? '' : 'T') . a:width
+  call setline(line('.'), getline('.') . l:modeline)
+  execute l:cmd
+  echo l:cmd . ':' . a:expand_flag
+endfunction
+command -nargs=+ IME call InsertModeline(1, <f-args>)
+command -nargs=+ IMN call InsertModeline(0, <f-args>)
+command -nargs=* IM2 call InsertModeline(1, 2, <f-args>)
+command -nargs=* IM4 call InsertModeline(1, 4, <f-args>)
+command -nargs=* IM8 call InsertModeline(1, 8, <f-args>)
+command! -nargs=0 Scratch new | setlocal buftype=nofile bufhidden=hide noswapfile
 
 "################################################################
 " Plugins will be downloaded under the specified directory.
@@ -62,31 +89,32 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'lifepillar/vim-solarized8'
 Plug 'preservim/nerdtree'
 "Plug 'junegunn/seoul256.vim'
-"Plug 'vim-jp/vimdoc-ja'
+Plug 'vim-jp/vimdoc-ja'
 Plug 'vim-skk/eskk.vim'
 Plug 'mattn/vim-lsp-settings'
 "Plug 'mattn/vim-lsp-icons'
 Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/vsnip-snippets'
+"Plug 'prabirshrestha/asyncomplete-buffer.vim'
+"Plug 'prabirshrestha/vsnip-snippets'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'rafamadriz/friendly-snippets'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-commentary'
+"Plug 'tpope/vim-surround'
 "Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 "Plug 'nathanaelkane/vim-indent-guides'
 Plug 'itchyny/lightline.vim'
-Plug 'itchyny/calendar.vim'
+"Plug 'itchyny/calendar.vim'
 "Plug 'OmniSharp/omnisharp-vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
+command NT :NERDTreeToggle
 silent! colorscheme solarized8
 "let g:indent_guides_enable_on_vim_startup = 1
 "let g:lightline.colorscheme = 'solarized'
@@ -220,19 +248,13 @@ command AT call AsyncompleteToggle()
 "############
 "### eskk ###
 "############
-"if !filereadable(expand('~/.skk/SKK-JISYO.L'))
-"  call mkdir('~/.skk', 'p')
-"  call system('cd ~/.skk/ && wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && gzip -d SKK-JISYO.L.gz')
-"endif
+if !filereadable(expand('~/.skk/SKK-JISYO.L'))
+  call mkdir('~/.skk', 'p')
+  call system('cd ~/.skk/ && wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && gzip -d SKK-JISYO.L.gz')
+endif
 let g:eskk#directory = "~/.skk"
 let g:eskk#dictionary = { 'path': "~/.skk/my_jisyo", 'sorted': 1, 'encoding': 'utf-8',}
 let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
 let g:eskk#egg_like_newline = 1
 "############
-
-
-"#####################
-"### private macro ###
-"#####################
-command NT :NERDTreeToggle
 
