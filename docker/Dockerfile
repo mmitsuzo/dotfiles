@@ -39,6 +39,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
 	binutils binutils-doc gcc gcc-doc g++ gdb gdb-doc make make-doc \
 	libncurses-dev \
 	cmake cmake-doc \
+	ninja-build gettext \
 	autoconf autoconf-doc automake libtool libtool-doc m4 m4-doc
 
 #RUN apt install -y texlive-latex-recommended texlive-latex-extra \
