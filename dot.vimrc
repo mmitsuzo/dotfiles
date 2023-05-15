@@ -4,13 +4,15 @@ let mapleader = "\<Space>"
 "set clipboard=unnamed,unnamedplug
 "set nocompatible
 "set helplang=ja
-"set shell=bash
 "set nrformats=
 filetype plugin indent on
 syntax on
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 "nmap <silent> // :nohlsearch<CR>
+set shell=bash
 "nnoremap <silent> <leader>/ :nohlsearch<CR>
+"tnoremap <Esc> <C-\><C-n>
+tnoremap <Esc> <C-W>N
 set hlsearch
 set incsearch
 set laststatus=2
@@ -114,8 +116,10 @@ Plug 'itchyny/lightline.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
+let NERDTreeHijackNetrw = 0
 command NT :NERDTreeToggle
-silent! colorscheme solarized8
+"silent! colorscheme solarized8
+silent! colorscheme solarized8_high
 "let g:indent_guides_enable_on_vim_startup = 1
 "let g:lightline.colorscheme = 'solarized'
 "let g:calendar_google_calendar = 1
@@ -124,6 +128,7 @@ silent! colorscheme solarized8
 "############################
 "### asyncomplete setting ###
 "############################
+"let g:asyncomplete_auto_popup = 0
 "let g:asyncomplete_auto_popup = 1
 "let g:asyncomplete_auto_completeopt = 1
 "inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
