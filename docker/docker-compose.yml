@@ -1,4 +1,4 @@
-version: "3"
+version: "3.6"
 
 services:
   work:
@@ -15,48 +15,121 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /mnt/wslg:/mnt/wslg
-      - ./vol-work:/home/user/work
+      - ./vol-work:/home/ubuntu/work
+    ports:
+#      - '80:80'
+#      - '8000:8000'
+      - '8080:8080'
+#      - '29418:29418'
+
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.example.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.example.com'
+        # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - '80:80'
-      - '8000:8000'
+      - '443:443'
+      - '22:22'
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+    shm_size: '256m'
 
   gitbucket:
     image: gitbucket/gitbucket
     container_name: gitbucket
     environment:
-      - DISPLAY=$DISPLAY
-      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
-      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
-      - PULSE_SERVER=$PULSE_SERVER
       - GITBUCKET_PORT=8081
       - GITBUCKET_SECUREPORT=8443
     restart: always
     tty: true
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /mnt/wslg:/mnt/wslg
       - ./vol-gitbucket:/gitbucket
     ports:
       - '8081:8081'
       - '29418:29418'
+#      - '8080:8080'
+
+  postgres-gogs:
+    image: postgres:latest
+    container_name: postgres-gogs
+    environment:
+      - POSTGRES_USER=gogs
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gogs
+    volumes:
+      - ./vol-postgres:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - '5432:5432'
+
+  gogs:
+    image: gogs/gogs
+    container_name: gogs
+    environment:
+    restart: always
+    tty: true
+    depends_on:
+      - postgres-gogs
+    volumes:
+      - ./vol-gogs:/data
+    ports:
+      - '10022:22'
+      - '10880:3000'
+
+  postgres-gitea:
+    image: postgres:latest
+    container_name: postgres-gitea
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gitea
+    volumes:
+      - ./vol-postgres-gitea:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - '15432:5432'
+
+  gitea:
+    image: gitea/gitea:latest-rootless
+    container_name: gitea
+    environment:
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=postgres-gitea:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+    restart: always
+    volumes:
+      - ./vol-gitea-data:/var/lib/gitea
+      - ./vol-gitea-config:/etc/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "13000:3000"
+      - "12222:2222"
+    depends_on:
+      - postgres-gitea
+
 
   jenkins:
     image: jenkins/jenkins:latest
     container_name: jenkins
     environment:
-      - DISPLAY=$DISPLAY
-      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
-      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
-      - PULSE_SERVER=$PULSE_SERVER
     restart: always
     tty: true
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /mnt/wslg:/mnt/wslg
       - ./vol-jenkins:/var/jenkins_home
     ports:
       - '8080:8080'
       - '50000:50000'
+#      - '8080:8080'
 
 networks:
   default:
