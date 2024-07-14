@@ -4,10 +4,10 @@
 filetype plugin indent on
 syntax on
 "nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
-"set hlsearch
-"set incsearch
+set hlsearch
+set incsearch
 "set laststatus=2
-"set modeline
+set modeline
 "set wildmenu
 "set wildmode=full
 "set showcmd
@@ -16,6 +16,8 @@ syntax on
 "set nolist
 "set list
 "set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:␣
+set ambiwidth=double
+"set ambiwidth=single
 
 set background=dark
 "set termguicolors
@@ -50,6 +52,7 @@ Plug 'vim-skk/eskk.vim'
 "Plug 'tpope/vim-surround'
 "Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
+"Plug 'rbtnn/vim-ambiwidth'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
