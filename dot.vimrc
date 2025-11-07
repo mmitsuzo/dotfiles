@@ -53,6 +53,7 @@ Plug 'vim-skk/eskk.vim'
 "Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
 "Plug 'rbtnn/vim-ambiwidth'
+Plug 'github/copilot.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################

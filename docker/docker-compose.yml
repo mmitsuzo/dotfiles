@@ -3,47 +3,32 @@ version: "3.6"
 services:
   work:
     build: .
+      context: ./work
+      dockerfile: Dockerfile
     image: img-work
-    container_name: work
+    container_name: work-container
+    hostname: work
+    tty: true
+    restart: always
     environment:
       - DISPLAY=$DISPLAY
       - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
       - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
       - PULSE_SERVER=$PULSE_SERVER
-    restart: always
-    tty: true
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /mnt/wslg:/mnt/wslg
       - ./vol-work:/home/ubuntu/work
     ports:
-#      - '80:80'
-#      - '8000:8000'
       - '8080:8080'
-#      - '29418:29418'
-
-  gitlab:
-    image: 'gitlab/gitlab-ce:latest'
-    container_name: gitlab
-    restart: always
-    hostname: 'gitlab.example.com'
-    environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.example.com'
-        # Add any other gitlab.rb configuration here, each on its own line
-    ports:
-      - '80:80'
-      - '443:443'
-      - '22:22'
-    volumes:
-      - '$GITLAB_HOME/config:/etc/gitlab'
-      - '$GITLAB_HOME/logs:/var/log/gitlab'
-      - '$GITLAB_HOME/data:/var/opt/gitlab'
-    shm_size: '256m'
+    networks:
+      work-network:
+        ipv4_address: 192.168.10.1
 
   gitbucket:
     image: gitbucket/gitbucket
-    container_name: gitbucket
+    container_name: gitbucket-container
+    hostname: gitbucket
     environment:
       - GITBUCKET_PORT=8081
       - GITBUCKET_SECUREPORT=8443
@@ -54,11 +39,14 @@ services:
     ports:
       - '8081:8081'
       - '29418:29418'
-#      - '8080:8080'
+    networks:
+      work-network:
+        ipv4_address: 192.168.10.2
 
   postgres-gogs:
     image: postgres:latest
-    container_name: postgres-gogs
+    container_name: postgres-gogs-container
+    hostname: postgres-gogs
     environment:
       - POSTGRES_USER=gogs
       - POSTGRES_PASSWORD=postgres
@@ -68,10 +56,14 @@ services:
     restart: always
     ports:
       - '5432:5432'
+    networks:
+      work-network:
+        ipv4_address: 192.168.10.3
 
   gogs:
     image: gogs/gogs
-    container_name: gogs
+    container_name: gogs-container
+    hostname: gogs
     environment:
     restart: always
     tty: true
@@ -82,10 +74,14 @@ services:
     ports:
       - '10022:22'
       - '10880:3000'
+    networks:
+      work-network:
+        ipv4_address: 192.168.10.4
 
   postgres-gitea:
     image: postgres:latest
-    container_name: postgres-gitea
+    container_name: postgres-gitea-container
+    hostname: postgres-gitea
     environment:
       - POSTGRES_USER=gitea
       - POSTGRES_PASSWORD=postgres
@@ -95,6 +91,9 @@ services:
     restart: always
     ports:
       - '15432:5432'
+    networks:
+      work-network:
+        ipv4_address: 192.168.10.5
 
   gitea:
     image: gitea/gitea:latest-rootless
@@ -116,11 +115,15 @@ services:
       - "12222:2222"
     depends_on:
       - postgres-gitea
+    networks:
+      work-network:
+        ipv4_address: 192.168.10.6
 
 
   jenkins:
     image: jenkins/jenkins:latest
-    container_name: jenkins
+    container_name: jenkins-container
+    hostname: jenkins
     environment:
     restart: always
     tty: true
@@ -129,8 +132,13 @@ services:
     ports:
       - '8080:8080'
       - '50000:50000'
-#      - '8080:8080'
+    networks:
+      work-network:
+        ipv4_address: 192.168.10.7
 
 networks:
-  default:
-    name: work-network
+  work-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
