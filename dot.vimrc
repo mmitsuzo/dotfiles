@@ -4,8 +4,10 @@
 filetype plugin indent on
 syntax on
 "nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+"tnoremap <C-w><C-n> <C-w>N
 set hlsearch
 set incsearch
+set shortmess-=S
 "set laststatus=2
 set modeline
 "set wildmenu
@@ -16,8 +18,9 @@ set modeline
 "set nolist
 "set list
 "set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:␣
-set ambiwidth=double
+"set ambiwidth=double
 "set ambiwidth=single
+set shell=bash
 
 set background=dark
 "set termguicolors
