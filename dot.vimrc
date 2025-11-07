@@ -54,6 +54,8 @@ Plug 'vim-skk/eskk.vim'
 Plug 'tpope/vim-fugitive'
 "Plug 'rbtnn/vim-ambiwidth'
 Plug 'github/copilot.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
