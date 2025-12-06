@@ -1,15 +1,19 @@
 " vim: set sw=2 ts=2 sts=2 et tw=78 :
 "let mapleader = "\<Space>"
+let mapleader = " "
+"let mapleader = ","
 "set nrformats=
 filetype plugin indent on
 syntax on
 nmap <Esc><Esc> :nohlsearch<Enter>
 "nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 "tnoremap <C-w><C-n> <C-w>N
+nnoremap <leader>cd :Ex<CR>
 set hlsearch
 set incsearch
-set shortmess-=S
-"set laststatus=2
+"set shortmess-=S
+set shortmess+=c
+set laststatus=2
 set modeline
 "set wildmenu
 "set wildmode=full
@@ -22,9 +26,11 @@ set modeline
 "set ambiwidth=double
 "set ambiwidth=single
 set shell=bash
+"set cursorline
+"set cursorcolumn
 
-set background=dark
-"set termguicolors
+"set background=dark
+set termguicolors
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 "let &t_SI.="\e[5 q" "SI = INSERT mode
@@ -46,11 +52,17 @@ command TT2 set ts=2 sw=2 sts=2 noet
 command TT4 set ts=4 sw=4 sts=4 noet
 command TT8 set ts=8 sw=8 sts=8 noet
 
+"autocmd FileType qf nnoremap <buffer> p  <CR><C-w>p
+autocmd FileType qf nnoremap <buffer> P  <CR>zz<C-w>p
+autocmd FileType qf nnoremap <buffer> J j<CR>zz<C-w>p
+autocmd FileType qf nnoremap <buffer> K k<CR>zz<C-w>p
+"autocmd FileType qf setlocal statusline+=\ %L
+
 "################################################################
 " Plugins will be downloaded under the specified directory.
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " Declare the list of plugins.
-"Plug 'vim-jp/vimdoc-ja'
+Plug 'vim-jp/vimdoc-ja'
 Plug 'vim-skk/eskk.vim'
 "Plug 'tpope/vim-commentary'
 "Plug 'tpope/vim-surround'
@@ -65,6 +77,9 @@ Plug 'yegappan/lsp'
 "Plug 'mattn/vim-lsp-settings'
 "Plug 'hrsh7th/vim-vsnip'
 "Plug 'hrsh7th/vim-vsnip-integ'
+"Plug 'vim-fuzzbox/fuzzbox.vim'
+Plug 'ghifarit53/tokyonight-vim'
+Plug 'itchyny/lightline.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
@@ -81,6 +96,45 @@ let g:eskk#dictionary = { 'path': "~/.skk/my_jisyo", 'sorted': 1, 'encoding': 'u
 let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
 let g:eskk#egg_like_newline = 1
 "############
+
+"###########
+"### FZF ###
+"###########
+" Files
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fo :History<CR>
+nnoremap <leader>fb :Buffers<CR>
+nnoremap <leader>fq :CList<CR>    " For quickfix list
+nnoremap <leader>fh :Helptags<CR>
+" Grep current string
+nnoremap <leader>fs :Rg <C-r><C-w><CR>
+" Grep input string (fzf prompt)
+nnoremap <leader>fg :Rg<Space>
+" Grep for current file name (without extension)
+nnoremap <leader>fc :execute 'Rg ' . expand('%:t:r')<CR>
+" Find files in your Vim config
+nnoremap <leader>fi :Files ~/.vim<CR>
+
+"#################
+"### lightline ###
+"#################
+set laststatus=2
+let g:lightline = {
+      \ 'colorscheme' : 'tokyonight',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \   'filename': 'LightlineFilename'
+      \ }
+      \ }
+
+function! LightlineFilename()
+  return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+endfunction
 
 ""###############
 ""### vim-lsp ###
@@ -131,34 +185,102 @@ let g:eskk#egg_like_newline = 1
 " (vimcomplete is implemented as core feature in latest vim)
 " reference: https://github.com/yegappan/lsp/
 " reference: https://github.com/yegappan/lsp/blob/main/doc/configs.md
-
-"" Clangd language server
-"call LspAddServer([#{
-"	\    name: 'clangd',
-"	\    filetype: ['c', 'cpp'],
-"	\    path: '/usr/local/bin/clangd',
-"	\    args: ['--background-index']
-"	\  }])
-
+"
+"set completeopt=menu,menuone,noselect
+"
 " setting for vim-plug
-let lspOpts = #{autoHighlightDiags: v:true}
+" set options 
+"autocmd User LspSetup call LspOptionsSet(#{
+"      \ autoHighlightDiags: v:true,
+"      \ diagVirtualText: v:true,
+"      \ diagSign: v:true,
+"      \})
+"" reference: https://github.com/yegappan/lsp/pull/332
+""      \ completionTextEdit: v:false,
+""      \ snippetSupport: v:true,
+""      \ ultisnipsSupport: v:false,
+""      \ vsnipSupport: v:true,
+let lspOpts = #{autoHighlightDiag: v:true}
 autocmd User LspSetup call LspOptionsSet(lspOpts)
 
-let lspServers = []
 " for C/C++ LSP: apt install clangd
-call add(lspServers, #{
-      \ name: 'clang',
+autocmd User LspSetup call LspAddServer([#{
+      \ name: 'clangd',
       \ filetype: ['c', 'cpp'],
       \ path: '/usr/bin/clangd',
       \ args: ['--background-index']
-      \})
+      \}])
 " for python LSP: apt install python3-pylsp
-call add(lspServers, #{
+autocmd User LspSetup call LspAddServer([#{
       \	  name: 'pylsp',
-      \	  filetype: 'python',
+      \	  filetype: ['python'],
       \	  path: '/usr/bin/pylsp',
       \	  args: []
-      \})
-autocmd User LspSetup call LspAddServer(lspServers)
+      \}])
+" for CSS: npm install --global vscode-css-languageserver-bin
+autocmd User LspSetup call LspAddServer([#{
+      \	  name: 'cssls',
+      \	  filetype: ['css'],
+      \	  path: '/usr/bin/css-languageserver',
+      \	  args: ['--stdio']
+      \}])
+" for AWK: npm install -g awk-language-server
+autocmd User LspSetup call LspAddServer([#{
+      \	  name: 'awkls',
+      \	  filetype: ['awk'],
+      \	  path: '/usr/bin/awk-language-server',
+      \	  args: []
+      \}])
+" for TypeScript/JavaScript: npm install -g typescript-language-server typescript
+autocmd User LspSetup call LspAddServer([#{
+      \	  name: 'tsserver',
+      \	  filetype: ['javascript', 'typescript'],
+      \	  path: '/usr/bin/typescript-language-server',
+      \	  args: ['--stdio']
+      \}])
+
+nnoremap <leader>gd <cmd>LspGotoDefinition<CR>
+nnoremap <leader>gr <cmd>LspShowReference<CR>
+nnoremap <leader>K <cmd>LspHover<CR>
+nnoremap K :LspHover<CR>
+nnoremap <leader>gl <cmd>LspDiag current<CR>
+nnoremap <leader>nd <cmd>LspDiag next \| LspDiag current<CR>
+nnoremap <leader>pd <cmd>LspDiag prev \| LspDiag current<CR>
+inoremap <silent> <leader><Space> <C-x><C-o>
+nnoremap <leader>gi <cmd>LspGotoImpl<CR>
+nnoremap <leader>gt <cmd>LspGotoTypeDef<CR>
+nnoremap <leader>rn <cmd>LspRename<CR>
+nnoremap <leader>ca <cmd>LspCodeAction<CR>
+" combine with fzf
+nnoremap <leader>ss :LspSymbolSearch<CR>
+
+"" TAB as completion or indent based on the situation
+"inoremap <silent><expr> <Tab>
+"      \ pumvisible() ? "\<C-n>" :
+"      \ getline('.')[col('.')-1] =~ '\k' ? "\<C-x>\<C-o>" :
+"      \ "\<Tab>"
+"
+"" Shift-TAB does reverse of TAB
+"inoremap <silent><expr> <S-Tab>
+"      \ pumvisible() ? "\<C-p>" : "\<C-h>"
+"
+"" Enter as confirmation
+"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+
+" color of popup menu
+"hi Pmenu      ctermbg=236
+"hi PmenuSel   ctermbg=240 ctermfg=255
 "###########
 
+"#########################
+"### vsnip/vsnip-integ ###
+"#########################
+"" Jump forward or backward
+"imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+"smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+"imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+"smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+"
+"inoremap <silent><expr> <Tab>  pumvisible() ? "\<C-n>" : getline('.')[col('.')-1] =~ '\k' ? "\<C-x>\<C-o>" : "\<Tab>"
+"inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
+"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
