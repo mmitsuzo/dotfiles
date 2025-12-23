@@ -5,7 +5,8 @@
 "set nrformats=
 filetype plugin indent on
 syntax on
-nmap <Esc><Esc> :nohlsearch<Enter>
+"nmap <Esc><Esc> :nohlsearch<Enter>
+nnoremap <Esc><Esc> :nohlsearch<Enter>
 "nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 "tnoremap <C-w><C-n> <C-w>N
 nnoremap <leader>cd :Ex<CR>
@@ -25,7 +26,7 @@ set modeline
 "set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:␣
 "set ambiwidth=double
 "set ambiwidth=single
-set shell=bash
+"set shell=bash
 "set cursorline
 "set cursorcolumn
 
@@ -62,7 +63,7 @@ autocmd FileType qf nnoremap <buffer> K k<CR>zz<C-w>p
 " Plugins will be downloaded under the specified directory.
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " Declare the list of plugins.
-Plug 'vim-jp/vimdoc-ja'
+"Plug 'vim-jp/vimdoc-ja'
 Plug 'vim-skk/eskk.vim'
 "Plug 'tpope/vim-commentary'
 "Plug 'tpope/vim-surround'
@@ -70,11 +71,11 @@ Plug 'vim-skk/eskk.vim'
 Plug 'tpope/vim-fugitive'
 "Plug 'rbtnn/vim-ambiwidth'
 "Plug 'github/copilot.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"Plug 'junegunn/fzf.vim'
 "Plug 'junegunn/goyo.vim'
 "Plug 'junegunn/limelight.vim'
-Plug 'yegappan/lsp'
+"Plug 'yegappan/lsp'
 "Plug 'prabirshrestha/vim-lsp'
 "Plug 'mattn/vim-lsp-settings'
 "Plug 'hrsh7th/vim-vsnip'
@@ -98,26 +99,9 @@ endif
 let g:eskk#directory = "~/.skk"
 let g:eskk#dictionary = { 'path': "~/.skk/my_jisyo", 'sorted': 1, 'encoding': 'utf-8',}
 let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
-let g:eskk#egg_like_newline = 1
+"let g:eskk#egg_like_newline = 1
+let g:eskk#immediately_dic_rw = 1
 "############
-
-"###########
-"### FZF ###
-"###########
-" Files
-nnoremap <leader>ff :Files<CR>
-nnoremap <leader>fo :History<CR>
-nnoremap <leader>fb :Buffers<CR>
-nnoremap <leader>fq :CList<CR>    " For quickfix list
-nnoremap <leader>fh :Helptags<CR>
-" Grep current string
-nnoremap <leader>fs :Rg <C-r><C-w><CR>
-" Grep input string (fzf prompt)
-nnoremap <leader>fg :Rg<Space>
-" Grep for current file name (without extension)
-nnoremap <leader>fc :execute 'Rg ' . expand('%:t:r')<CR>
-" Find files in your Vim config
-nnoremap <leader>fi :Files ~/.vim<CR>
 
 "#################
 "### lightline ###
@@ -147,6 +131,23 @@ set laststatus=2
 set termguicolors
 colorscheme kanagawa
 
+"###########
+"### FZF ###
+"###########
+"" Files
+"nnoremap <leader>ff :Files<CR>
+"nnoremap <leader>fo :History<CR>
+"nnoremap <leader>fb :Buffers<CR>
+"nnoremap <leader>fq :CList<CR>    " For quickfix list
+"nnoremap <leader>fh :Helptags<CR>
+"" Grep current string
+"nnoremap <leader>fs :Rg <C-r><C-w><CR>
+"" Grep input string (fzf prompt)
+"nnoremap <leader>fg :Rg<Space>
+"" Grep for current file name (without extension)
+"nnoremap <leader>fc :execute 'Rg ' . expand('%:t:r')<CR>
+"" Find files in your Vim config
+"nnoremap <leader>fi :Files ~/.vim<CR>
 
 ""###############
 ""### vim-lsp ###
@@ -213,60 +214,61 @@ colorscheme kanagawa
 ""      \ ultisnipsSupport: v:false,
 ""      \ vsnipSupport: v:true,
 
-let lspOpts = #{autoHighlightDiag: v:true}
-let lspServers = []
-" for C/C++ LSP: apt install clangd
-let lspServers = add(lspServers,#{
-      \ name: 'clangd',
-      \ filetype: ['c', 'cpp'],
-      \ path: '/usr/bin/clangd',
-      \ args: ['--background-index']
-      \})
-" for python LSP: apt install python3-pylsp
-let lspServers = add(lspServers,#{
-      \	  name: 'pylsp',
-      \	  filetype: ['python'],
-      \	  path: '/usr/bin/pylsp',
-      \	  args: []
-      \})
-" for CSS: npm install --global vscode-css-languageserver-bin
-let lspServers = add(lspServers,#{
-      \	  name: 'cssls',
-      \	  filetype: ['css'],
-      \	  path: '/usr/bin/css-languageserver',
-      \	  args: ['--stdio']
-      \})
-" for AWK: npm install -g awk-language-server
-let lspServers = add(lspServers,#{
-      \	  name: 'awkls',
-      \	  filetype: ['awk'],
-      \	  path: '/usr/bin/awk-language-server',
-      \	  args: []
-      \})
-" for TypeScript/JavaScript: npm install -g typescript-language-server typescript
-let lspServers = add(lspServers,#{
-      \	  name: 'tsserver',
-      \	  filetype: ['javascript', 'typescript'],
-      \	  path: '/usr/bin/typescript-language-server',
-      \	  args: ['--stdio']
-      \})
+"let lspOpts = #{autoHighlightDiag: v:true}
+"let lspServers = []
+"" for C/C++ LSP: apt install clangd
+"let lspServers = add(lspServers,#{
+"      \ name: 'clangd',
+"      \ filetype: ['c', 'cpp'],
+"      \ path: '/usr/bin/clangd',
+"      \ args: ['--background-index']
+"      \})
+"" for python LSP: apt install python3-pylsp
+"let lspServers = add(lspServers,#{
+"      \	  name: 'pylsp',
+"      \	  filetype: ['python'],
+"      \	  path: '/usr/bin/pylsp',
+"      \	  args: []
+"      \})
+"" for CSS: npm install --global vscode-css-languageserver-bin
+"let lspServers = add(lspServers,#{
+"      \	  name: 'cssls',
+"      \	  filetype: ['css'],
+"      \	  path: '/usr/bin/css-languageserver',
+"      \	  args: ['--stdio']
+"      \})
+"" for AWK: npm install -g awk-language-server
+"let lspServers = add(lspServers,#{
+"      \	  name: 'awkls',
+"      \	  filetype: ['awk'],
+"      \	  path: '/usr/bin/awk-language-server',
+"      \	  args: []
+"      \})
+"" for TypeScript/JavaScript: npm install -g typescript-language-server typescript
+"let lspServers = add(lspServers,#{
+"      \	  name: 'tsserver',
+"      \	  filetype: ['javascript', 'typescript'],
+"      \	  path: '/usr/bin/typescript-language-server',
+"      \	  args: ['--stdio']
+"      \})
+"
 "autocmd User LspSetup call LspOptionsSet(lspOpts)
 "autocmd User LspSetup call LspAddServer(lspServers)
-
-nnoremap <leader>gd <cmd>LspGotoDefinition<CR>
-nnoremap <leader>gr <cmd>LspShowReference<CR>
-nnoremap <leader>K <cmd>LspHover<CR>
-nnoremap K :LspHover<CR>
-nnoremap <leader>gl <cmd>LspDiag current<CR>
-nnoremap <leader>nd <cmd>LspDiag next \| LspDiag current<CR>
-nnoremap <leader>pd <cmd>LspDiag prev \| LspDiag current<CR>
-inoremap <silent> <leader><Space> <C-x><C-o>
-nnoremap <leader>gi <cmd>LspGotoImpl<CR>
-nnoremap <leader>gt <cmd>LspGotoTypeDef<CR>
-nnoremap <leader>rn <cmd>LspRename<CR>
-nnoremap <leader>ca <cmd>LspCodeAction<CR>
-" combine with fzf
-nnoremap <leader>ss :LspSymbolSearch<CR>
+"
+"nnoremap <leader>gd <cmd>LspGotoDefinition<CR>
+"nnoremap <leader>gr <cmd>LspShowReference<CR>
+"nnoremap <leader>K <cmd>LspHover<CR>
+"nnoremap K :LspHover<CR>
+"nnoremap <leader>gl <cmd>LspDiag current<CR>
+"nnoremap <leader>nd <cmd>LspDiag next \| LspDiag current<CR>
+"nnoremap <leader>pd <cmd>LspDiag prev \| LspDiag current<CR>
+"inoremap <silent> <leader><Space> <C-x><C-o>
+"nnoremap <leader>gi <cmd>LspGotoImpl<CR>
+"nnoremap <leader>gt <cmd>LspGotoTypeDef<CR>
+"nnoremap <leader>rn <cmd>LspRename<CR>
+"nnoremap <leader>ca <cmd>LspCodeAction<CR>
+"" combine with fzf
+"nnoremap <leader>ss :LspSymbolSearch<CR>
 
 "" TAB as completion or indent based on the situation
 "inoremap <silent><expr> <Tab>
