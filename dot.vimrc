@@ -212,44 +212,46 @@ colorscheme kanagawa
 ""      \ snippetSupport: v:true,
 ""      \ ultisnipsSupport: v:false,
 ""      \ vsnipSupport: v:true,
-let lspOpts = #{autoHighlightDiag: v:true}
-autocmd User LspSetup call LspOptionsSet(lspOpts)
 
+let lspOpts = #{autoHighlightDiag: v:true}
+let lspServers = []
 " for C/C++ LSP: apt install clangd
-autocmd User LspSetup call LspAddServer([#{
+let lspServers = add(lspServers,#{
       \ name: 'clangd',
       \ filetype: ['c', 'cpp'],
       \ path: '/usr/bin/clangd',
       \ args: ['--background-index']
-      \}])
+      \})
 " for python LSP: apt install python3-pylsp
-autocmd User LspSetup call LspAddServer([#{
+let lspServers = add(lspServers,#{
       \	  name: 'pylsp',
       \	  filetype: ['python'],
       \	  path: '/usr/bin/pylsp',
       \	  args: []
-      \}])
+      \})
 " for CSS: npm install --global vscode-css-languageserver-bin
-autocmd User LspSetup call LspAddServer([#{
+let lspServers = add(lspServers,#{
       \	  name: 'cssls',
       \	  filetype: ['css'],
       \	  path: '/usr/bin/css-languageserver',
       \	  args: ['--stdio']
-      \}])
+      \})
 " for AWK: npm install -g awk-language-server
-autocmd User LspSetup call LspAddServer([#{
+let lspServers = add(lspServers,#{
       \	  name: 'awkls',
       \	  filetype: ['awk'],
       \	  path: '/usr/bin/awk-language-server',
       \	  args: []
-      \}])
+      \})
 " for TypeScript/JavaScript: npm install -g typescript-language-server typescript
-autocmd User LspSetup call LspAddServer([#{
+let lspServers = add(lspServers,#{
       \	  name: 'tsserver',
       \	  filetype: ['javascript', 'typescript'],
       \	  path: '/usr/bin/typescript-language-server',
       \	  args: ['--stdio']
-      \}])
+      \})
+"autocmd User LspSetup call LspOptionsSet(lspOpts)
+"autocmd User LspSetup call LspAddServer(lspServers)
 
 nnoremap <leader>gd <cmd>LspGotoDefinition<CR>
 nnoremap <leader>gr <cmd>LspShowReference<CR>
