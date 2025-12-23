@@ -1,6 +1,6 @@
 " vim: set sw=2 ts=2 sts=2 et tw=78 :
 "let mapleader = "\<Space>"
-let mapleader = " "
+"let mapleader = " "
 "let mapleader = ","
 "set nrformats=
 filetype plugin indent on
@@ -13,7 +13,7 @@ set hlsearch
 set incsearch
 "set shortmess-=S
 set shortmess+=c
-set laststatus=2
+"set laststatus=2
 set modeline
 "set wildmenu
 "set wildmode=full
@@ -30,7 +30,7 @@ set shell=bash
 "set cursorcolumn
 
 "set background=dark
-set termguicolors
+"set termguicolors
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 "let &t_SI.="\e[5 q" "SI = INSERT mode
@@ -72,14 +72,18 @@ Plug 'tpope/vim-fugitive'
 "Plug 'github/copilot.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/goyo.vim'
+"Plug 'junegunn/limelight.vim'
 Plug 'yegappan/lsp'
 "Plug 'prabirshrestha/vim-lsp'
 "Plug 'mattn/vim-lsp-settings'
 "Plug 'hrsh7th/vim-vsnip'
 "Plug 'hrsh7th/vim-vsnip-integ'
 "Plug 'vim-fuzzbox/fuzzbox.vim'
-Plug 'ghifarit53/tokyonight-vim'
-Plug 'itchyny/lightline.vim'
+"
+"Plug 'ghifarit53/tokyonight-vim'
+"Plug 'itchyny/lightline.vim'
+Plug 'menisadi/kanagawa.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
@@ -118,23 +122,31 @@ nnoremap <leader>fi :Files ~/.vim<CR>
 "#################
 "### lightline ###
 "#################
-set laststatus=2
-let g:lightline = {
-      \ 'colorscheme' : 'tokyonight',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead',
-      \   'filename': 'LightlineFilename'
-      \ }
-      \ }
+"set laststatus=2
+"let g:lightline = {
+"      \ 'colorscheme' : 'tokyonight',
+"      \ 'active': {
+"      \   'left': [ [ 'mode', 'paste' ],
+"      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+"      \   'right': [ [ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+"      \ },
+"      \ 'component_function': {
+"      \   'gitbranch': 'FugitiveHead',
+"      \   'filename': 'LightlineFilename'
+"      \ }
+"      \ }
+"
+"function! LightlineFilename()
+"  return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+"endfunction
 
-function! LightlineFilename()
-  return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-endfunction
+"################
+"### kanagawa ###
+"################
+set laststatus=2
+set termguicolors
+colorscheme kanagawa
+
 
 ""###############
 ""### vim-lsp ###
