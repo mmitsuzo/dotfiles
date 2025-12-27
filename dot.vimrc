@@ -251,6 +251,13 @@ colorscheme kanagawa
 "      \	  path: '/usr/bin/typescript-language-server',
 "      \	  args: ['--stdio']
 "      \})
+"" for Vimscript: npm install -g vim-language-server
+"let lspServers = add(lspServers,#{
+"      \	  name: 'vimls',
+"      \	  filetype: ['vim'],
+"      \	  path: '/usr/bin/vim-language-server',
+"      \	  args: ['--stdio']
+"      \})
 "
 "autocmd User LspSetup call LspOptionsSet(lspOpts)
 "autocmd User LspSetup call LspAddServer(lspServers)
@@ -300,3 +307,23 @@ colorscheme kanagawa
 "inoremap <silent><expr> <Tab>  pumvisible() ? "\<C-n>" : getline('.')[col('.')-1] =~ '\k' ? "\<C-x>\<C-o>" : "\<Tab>"
 "inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
 "inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+
+function! FoldMarkdown(lnum)
+  let maxfold = 3
+  let line = getline(a:lnum)
+  let next = getline(a:lnum + 1)
+
+  for n in range(1, maxfold)
+    let restr = '^#\{' . n . '}[^#]\+'
+    if line =~ restr
+      return n
+    elseif next =~ restr
+      return '<' . n
+    endif
+  endfor
+
+  return '='
+endfunction
+"set foldmethod=expr foldexpr=FoldMarkdown(v:lnum)
+"autocmd FileType markdown :setlocal foldmethod=expr foldexpr=FoldMarkdown(v:lnum)
+
