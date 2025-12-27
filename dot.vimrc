@@ -309,22 +309,15 @@ colorscheme kanagawa
 "inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
 "inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 
-function! FoldMarkdown(lnum)
+function! s:FoldMarkdown()
   let maxfold = 3
-  let line = getline(a:lnum)
-  let next = getline(a:lnum + 1)
-
+  let line = getline(v:lnum)
   for n in range(1, maxfold)
-    let restr = '^#\{' . n . '}[^#]\+'
-    if line =~ restr
-      return n
-    elseif next =~ restr
-      return '<' . n
+    if line =~ '^#\{' . n . '}[^#]\+'
+      return '>' . n
     endif
   endfor
-
   return '='
 endfunction
-"set foldmethod=expr foldexpr=FoldMarkdown(v:lnum)
-"autocmd FileType markdown :setlocal foldmethod=expr foldexpr=FoldMarkdown(v:lnum)
+autocmd FileType markdown setlocal foldmethod=expr foldexpr=<SID>FoldMarkdown()
 
