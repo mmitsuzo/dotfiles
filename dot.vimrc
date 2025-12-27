@@ -5,11 +5,12 @@
 "set nrformats=
 filetype plugin indent on
 syntax on
-"nmap <Esc><Esc> :nohlsearch<Enter>
-nnoremap <Esc><Esc> :nohlsearch<Enter>
+nnoremap <silent> <Esc><Esc> :nohlsearch<Enter>
 "nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 "tnoremap <C-w><C-n> <C-w>N
 nnoremap <leader>cd :Ex<CR>
+"set number
+"set relativenumber
 set hlsearch
 set incsearch
 "set shortmess-=S
