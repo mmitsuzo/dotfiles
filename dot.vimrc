@@ -8,9 +8,10 @@ syntax on
 nnoremap <silent> <Esc><Esc> :nohlsearch<Enter>
 "nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 "tnoremap <C-w><C-n> <C-w>N
-nnoremap <leader>cd :Ex<CR>
+"nnoremap <leader>cd :Ex<CR>
 "set number
 "set relativenumber
+"set nu rnu
 set hlsearch
 set incsearch
 "set shortmess-=S
@@ -35,9 +36,17 @@ set modeline
 "set termguicolors
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-"let &t_SI.="\e[5 q" "SI = INSERT mode
-"let &t_SR.="\e[4 q" "SR = REPLACE mode
-"let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
+let &t_VS.="\e[2 q" "VS = USUAL mode
+let &t_SI.="\e[5 q" "SI = INSERT mode
+let &t_SR.="\e[3 q" "SR = REPLACE mode
+let &t_EI.="\e[2 q" "EI = NORMAL mode (ELSE)
+"number means followings:
+"	0, 1 or none	blinking block cursor
+"	2		block cursor
+"	3		blinking underline cursor
+"	4		underline cursor
+"	5		blinking vertical bar cursor
+"	6		vertical bar cursor
 
 "command T0 set ts=8 sw=8 sts=8 noai nosi nocin noet
 "command T2 set ts=2 sw=2 sts=2 ai si cin cino=(0,W2,g0,i0 et
@@ -83,8 +92,8 @@ Plug 'tpope/vim-fugitive'
 "Plug 'hrsh7th/vim-vsnip-integ'
 "Plug 'vim-fuzzbox/fuzzbox.vim'
 "
-"Plug 'ghifarit53/tokyonight-vim'
-"Plug 'itchyny/lightline.vim'
+Plug 'ghifarit53/tokyonight-vim'
+Plug 'itchyny/lightline.vim'
 Plug 'menisadi/kanagawa.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -107,28 +116,28 @@ let g:eskk#immediately_dic_rw = 1
 "#################
 "### lightline ###
 "#################
-"set laststatus=2
-"let g:lightline = {
-"      \ 'colorscheme' : 'tokyonight',
-"      \ 'active': {
-"      \   'left': [ [ 'mode', 'paste' ],
-"      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
-"      \   'right': [ [ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
-"      \ },
-"      \ 'component_function': {
-"      \   'gitbranch': 'FugitiveHead',
-"      \   'filename': 'LightlineFilename'
-"      \ }
-"      \ }
-"
-"function! LightlineFilename()
-"  return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-"endfunction
+set laststatus=2
+let g:lightline = {
+      \ 'colorscheme' : 'tokyonight',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \   'filename': 'LightlineFilename'
+      \ }
+      \ }
+
+function! LightlineFilename()
+  return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+endfunction
 
 "################
 "### kanagawa ###
 "################
-set laststatus=2
+"set laststatus=2
 set termguicolors
 colorscheme kanagawa
 
