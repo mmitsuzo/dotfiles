@@ -11,7 +11,7 @@ nnoremap <silent> <Esc><Esc> :nohlsearch<Enter>
 "nnoremap <leader>cd :Ex<CR>
 "set number
 "set relativenumber
-"set nu rnu
+set nu rnu
 set hlsearch
 set incsearch
 "set shortmess-=S
@@ -95,9 +95,19 @@ Plug 'tpope/vim-fugitive'
 Plug 'ghifarit53/tokyonight-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'menisadi/kanagawa.vim'
+"Plug 'godlygeek/tabular'
+"Plug 'preservim/vim-markdown'
+"Plug 'mattn/vim-maketable'
+"Plug 'dhruvasagar/vim-table-mode'
+Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
+
+"#############
+"### vZoom ###
+"#############
+nnoremap <C-w>go :VZoomAutoToggle<cr>
 
 "############
 "### eskk ###
@@ -122,7 +132,8 @@ let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component_function': {
       \   'gitbranch': 'FugitiveHead',
@@ -212,7 +223,7 @@ colorscheme kanagawa
 "set completeopt=menu,menuone,noselect
 "
 " setting for vim-plug
-" set options 
+" set options
 "autocmd User LspSetup call LspOptionsSet(#{
 "      \ autoHighlightDiags: v:true,
 "      \ diagVirtualText: v:true,
@@ -224,58 +235,58 @@ colorscheme kanagawa
 ""      \ ultisnipsSupport: v:false,
 ""      \ vsnipSupport: v:true,
 
-"let lspOpts = #{autoHighlightDiag: v:true}
-"let lspServers = []
-"" for C/C++ LSP: apt install clangd
-"let lspServers = add(lspServers,#{
-"      \ name: 'clangd',
-"      \ filetype: ['c', 'cpp'],
-"      \ path: '/usr/bin/clangd',
-"      \ args: ['--background-index']
-"      \})
-"" for python LSP: apt install python3-pylsp
-"let lspServers = add(lspServers,#{
-"      \	  name: 'pylsp',
-"      \	  filetype: ['python'],
-"      \	  path: '/usr/bin/pylsp',
-"      \	  args: []
-"      \})
-"" for CSS: npm install --global vscode-css-languageserver-bin
-"let lspServers = add(lspServers,#{
-"      \	  name: 'cssls',
-"      \	  filetype: ['css'],
-"      \	  path: '/usr/bin/css-languageserver',
-"      \	  args: ['--stdio']
-"      \})
-"" for AWK: npm install -g awk-language-server
-"let lspServers = add(lspServers,#{
-"      \	  name: 'awkls',
-"      \	  filetype: ['awk'],
-"      \	  path: '/usr/bin/awk-language-server',
-"      \	  args: []
-"      \})
-"" for TypeScript/JavaScript: npm install -g typescript-language-server typescript
-"let lspServers = add(lspServers,#{
-"      \	  name: 'tsserver',
-"      \	  filetype: ['javascript', 'typescript'],
-"      \	  path: '/usr/bin/typescript-language-server',
-"      \	  args: ['--stdio']
-"      \})
-"" for Vimscript: npm install -g vim-language-server
-"let lspServers = add(lspServers,#{
-"      \	  name: 'vimls',
-"      \	  filetype: ['vim'],
-"      \	  path: '/usr/bin/vim-language-server',
-"      \	  args: ['--stdio']
-"      \})
-"
+let lspOpts = #{autoHighlightDiag: v:true}
+let lspServers = []
+" for C/C++ LSP: apt install clangd
+let lspServers = add(lspServers,#{
+      \ name: 'clangd',
+      \ filetype: ['c', 'cpp'],
+      \ path: '/usr/bin/clangd',
+      \ args: ['--background-index']
+      \})
+" for python LSP: apt install python3-pylsp
+let lspServers = add(lspServers,#{
+      \	  name: 'pylsp',
+      \	  filetype: ['python'],
+      \	  path: '/usr/bin/pylsp',
+      \	  args: []
+      \})
+" for CSS: npm install --global vscode-css-languageserver-bin
+let lspServers = add(lspServers,#{
+      \	  name: 'cssls',
+      \	  filetype: ['css'],
+      \	  path: '/usr/bin/css-languageserver',
+      \	  args: ['--stdio']
+      \})
+" for AWK: npm install -g awk-language-server
+let lspServers = add(lspServers,#{
+      \	  name: 'awkls',
+      \	  filetype: ['awk'],
+      \	  path: '/usr/bin/awk-language-server',
+      \	  args: []
+      \})
+" for TypeScript/JavaScript: npm install -g typescript-language-server typescript
+let lspServers = add(lspServers,#{
+      \	  name: 'tsserver',
+      \	  filetype: ['javascript', 'typescript'],
+      \	  path: '/usr/bin/typescript-language-server',
+      \	  args: ['--stdio']
+      \})
+" for Vimscript: npm install -g vim-language-server
+let lspServers = add(lspServers,#{
+      \	  name: 'vimls',
+      \	  filetype: ['vim'],
+      \	  path: '/usr/bin/vim-language-server',
+      \	  args: ['--stdio']
+      \})
+
 "autocmd User LspSetup call LspOptionsSet(lspOpts)
 "autocmd User LspSetup call LspAddServer(lspServers)
 "
 "nnoremap <leader>gd <cmd>LspGotoDefinition<CR>
 "nnoremap <leader>gr <cmd>LspShowReference<CR>
 "nnoremap <leader>K <cmd>LspHover<CR>
-"nnoremap K :LspHover<CR>
+""nnoremap K :LspHover<CR>
 "nnoremap <leader>gl <cmd>LspDiag current<CR>
 "nnoremap <leader>nd <cmd>LspDiag next \| LspDiag current<CR>
 "nnoremap <leader>pd <cmd>LspDiag prev \| LspDiag current<CR>
