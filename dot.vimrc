@@ -81,9 +81,9 @@ Plug 'vim-skk/eskk.vim'
 Plug 'tpope/vim-fugitive'
 "Plug 'rbtnn/vim-ambiwidth'
 "Plug 'github/copilot.vim'
-"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-"Plug 'junegunn/fzf.vim'
-"Plug 'junegunn/goyo.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
 "Plug 'junegunn/limelight.vim'
 "Plug 'yegappan/lsp'
 "Plug 'prabirshrestha/vim-lsp'
@@ -99,15 +99,9 @@ Plug 'menisadi/kanagawa.vim'
 "Plug 'preservim/vim-markdown'
 "Plug 'mattn/vim-maketable'
 "Plug 'dhruvasagar/vim-table-mode'
-Plug 'KabbAmine/vZoom.vim', {'on': ['<Plug>(vzoom)', 'VZoomAutoToggle']}
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 "################################################################
-
-"#############
-"### vZoom ###
-"#############
-nnoremap <C-w>go :VZoomAutoToggle<cr>
 
 "############
 "### eskk ###
@@ -148,9 +142,31 @@ endfunction
 "################
 "### kanagawa ###
 "################
-"set laststatus=2
-set termguicolors
-colorscheme kanagawa
+function! KanagawaColorScheme()
+  set laststatus=2
+  set termguicolors
+  colorscheme kanagawa
+endfunction
+call KanagawaColorScheme()
+
+"############
+"### Goyo ###
+"############
+function! s:goyo_enter()
+  " do nothing
+endfunction
+
+function! s:goyo_leave()
+  call KanagawaColorScheme()
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+let g:goyo_width = '95%'
+let g:goyo_height = '95%'
+
+nnoremap <C-w>go :Goyo<CR>
 
 "###########
 "### FZF ###
