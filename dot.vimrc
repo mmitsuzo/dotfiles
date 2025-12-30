@@ -153,7 +153,7 @@ call KanagawaColorScheme()
 "### Goyo ###
 "############
 function! s:goyo_enter()
-  " do nothing
+  set nu rnu
 endfunction
 
 function! s:goyo_leave()
