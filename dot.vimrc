@@ -91,6 +91,8 @@ Plug 'junegunn/goyo.vim'
 "Plug 'hrsh7th/vim-vsnip'
 "Plug 'hrsh7th/vim-vsnip-integ'
 "Plug 'vim-fuzzbox/fuzzbox.vim'
+Plug 'chrisbra/vim_faq'
+Plug 'chrisbra/csv.vim'
 "
 Plug 'ghifarit53/tokyonight-vim'
 Plug 'itchyny/lightline.vim'
@@ -139,13 +141,20 @@ function! LightlineFilename()
   return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
 endfunction
 
+"###########
+"### csv ###
+"###########
+" do not allow to convert "," to "|" on the screen
+let g:csv_no_conceal = 1
+"unlet g:csv_no_conceal
+
 "################
 "### kanagawa ###
 "################
 function! KanagawaColorScheme()
   set laststatus=2
-  set termguicolors
-  colorscheme kanagawa
+  silent! set termguicolors
+  silent! colorscheme kanagawa
 endfunction
 call KanagawaColorScheme()
 
