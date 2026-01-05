@@ -1,67 +1,83 @@
-" vim: set sw=2 ts=2 sts=2 et tw=78 :
-"let mapleader = "\<Space>"
+" vim: set ts=2 sw=2 sts=2 et ft=vim:
+"
 "let mapleader = " "
 "let mapleader = ","
 "set nrformats=
 filetype plugin indent on
 syntax on
 nnoremap <silent> <Esc><Esc> :nohlsearch<Enter>
-"nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
-"tnoremap <C-w><C-n> <C-w>N
-"nnoremap <leader>cd :Ex<CR>
-"set number
-"set relativenumber
-set nu rnu
+tnoremap <Esc> <C-w>N
 set hlsearch
 set incsearch
-"set shortmess-=S
-set shortmess+=c
-"set laststatus=2
+"set clipboard+=unnamedplus
 set modeline
 "set wildmenu
-"set wildmode=full
 "set showcmd
-"set pastetoggle=<F12>
-"set nojoinspaces
-"set nolist
-"set list
-"set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:␣
-"set ambiwidth=double
-"set ambiwidth=single
-"set shell=bash
-"set cursorline
-"set cursorcolumn
-
-"set background=dark
+"set wildmode=full
 "set termguicolors
-"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-let &t_VS.="\e[2 q" "VS = USUAL mode
-let &t_SI.="\e[5 q" "SI = INSERT mode
-let &t_SR.="\e[3 q" "SR = REPLACE mode
-let &t_EI.="\e[2 q" "EI = NORMAL mode (ELSE)
-"number means followings:
-"	0, 1 or none	blinking block cursor
-"	2		block cursor
-"	3		blinking underline cursor
-"	4		underline cursor
-"	5		blinking vertical bar cursor
-"	6		vertical bar cursor
+"set notermguicolors
+"set background=dark
+"colorscheme default
+set shell=bash
+set laststatus=2
 
-"command T0 set ts=8 sw=8 sts=8 noai nosi nocin noet
-"command T2 set ts=2 sw=2 sts=2 ai si cin cino=(0,W2,g0,i0 et
-"command T4 set ts=4 sw=4 sts=4 ai si cin cino=(0,W4,g0,i0 et
-"command TT2 set ts=2 sw=2 sts=2 ai si cin cino=(0,W2,g0,i0 noet
-"command TT4 set ts=4 sw=4 sts=4 ai si cin cino=(0,W4,g0,i0 noet
-"command TT8 set ts=8 sw=8 sts=8 ai si cin cino=(0,W8,g0,i0 noet
-command T0 set ts=8 sw=8 sts=8 noet
-command T2 set ts=2 sw=2 sts=2 et
-command T4 set ts=4 sw=4 sts=4 et
-command T8 set ts=8 sw=8 sts=8 et
-command TT0 set ts=8 sw=8 sts=8 noet
-command TT2 set ts=2 sw=2 sts=2 noet
-command TT4 set ts=4 sw=4 sts=4 noet
-command TT8 set ts=8 sw=8 sts=8 noet
+"-----------------------------------------------------------------------
+" [terminal color]
+" default definition
+"let g:terminal_ansi_colors = [
+"      \ 'black', 'red', 'green', 'yellow',
+"      \ 'blue', 'magenta', 'cyan', 'white',
+"      \ 'black(bright)', 'red(bright)', 'green(bright)', 'yellow(bright)',
+"      \ 'blue(bright)', 'magenta(bright)', 'cyan(bright)', 'white(bright)' ]
+
+" kanagawa(wave) scheme
+"let g:terminal_ansi_colors = [
+"      \ "#090618", "#C34043", "#76946A", "#C0A36E",
+"      \ "#7E9CD8", "#957FB8", "#6A9589", "#C8C093",
+"      \ "#727169", "#E82424", "#98BB6C", "#E6C384",
+"      \ "#7FB4CA", "#938AA9", "#7AA89F", "#DCD7BA" ]
+
+" terminal sexy
+let g:terminal_ansi_colors = [
+      \ '#282a2e', '#a54242', '#8c9440', '#de935f',
+      \ '#5f819d', '#85678f', '#5e8d87', '#707880',
+      \ '#373b41', '#cc6666', '#b5bd68', '#f0c674',
+      \ '#81a2be', '#b294bb', '#8abeb7', '#c5c8c6' ]
+"-----------------------------------------------------------------------
+
+function! SimpleModeCommand(width, is_expand)
+  "set ts=n sw=n sts=n et (or noet)
+  let indent_width = a:width != 0 ? a:width : 8
+  let command_str = "set"
+  let command_str .= " ts=" . indent_width
+  let command_str .= " sw=" . indent_width
+  let command_str .= " sts=" . indent_width
+  let command_str .= eval(a:is_expand) ? " et" : " noet"
+  return command_str
+endfunction
+
+function! SimpleModelineString(width, is_expand)
+  "?? vim: set ts=n sw=n sts=n et: (or noet:)
+  let modeline_str = "vim: "
+  let modeline_str .= SimpleModeCommand(a:width, a:is_expand)
+  let modeline_str .= ":"
+  let modeline_str = printf(&commentstring, modeline_str)
+  return modeline_str
+endfunction
+
+command T0   execute(SimpleModeCommand(8, v:false))
+command T2   execute(SimpleModeCommand(2, v:true))
+command T4   execute(SimpleModeCommand(4, v:true))
+command T8   execute(SimpleModeCommand(8, v:true))
+command TT2  execute(SimpleModeCommand(2, v:false))
+command TT4  execute(SimpleModeCommand(4, v:false))
+command TT8  execute(SimpleModeCommand(8, v:false))
+command T2i  call append(eval(line('.')-1), SimpleModelineString(2, v:true))
+command T4i  call append(eval(line('.')-1), SimpleModelineString(4, v:true))
+command T8i  call append(eval(line('.')-1), SimpleModelineString(8, v:true))
+command TT2i call append(eval(line('.')-1), SimpleModelineString(2, v:false))
+command TT4i call append(eval(line('.')-1), SimpleModelineString(4, v:false))
+command TT8i call append(eval(line('.')-1), SimpleModelineString(8, v:false))
 
 "autocmd FileType qf nnoremap <buffer> p  <CR><C-w>p
 autocmd FileType qf nnoremap <buffer> P  <CR>zz<C-w>p
@@ -69,31 +85,53 @@ autocmd FileType qf nnoremap <buffer> J j<CR>zz<C-w>p
 autocmd FileType qf nnoremap <buffer> K k<CR>zz<C-w>p
 "autocmd FileType qf setlocal statusline+=\ %L
 
-"################################################################
 " Plugins will be downloaded under the specified directory.
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " Declare the list of plugins.
-"Plug 'vim-jp/vimdoc-ja'
-Plug 'vim-skk/eskk.vim'
+
+" SKK
+"Plug 'vim-skk/eskk.vim'
+Plug 'vim-skk/skk.vim'
+""" skkeleton is in denops part
+
+" Tim Pope
 "Plug 'tpope/vim-commentary'
 "Plug 'tpope/vim-surround'
 "Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-fugitive'
-"Plug 'rbtnn/vim-ambiwidth'
+
+" Copilot
 "Plug 'github/copilot.vim'
+
+" Junegunn
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 "Plug 'junegunn/limelight.vim'
-"Plug 'yegappan/lsp'
+
+" LSP
+Plug 'yegappan/lsp'
 "Plug 'prabirshrestha/vim-lsp'
 "Plug 'mattn/vim-lsp-settings'
 "Plug 'hrsh7th/vim-vsnip'
 "Plug 'hrsh7th/vim-vsnip-integ'
-"Plug 'vim-fuzzbox/fuzzbox.vim'
-Plug 'chrisbra/vim_faq'
+
+" Christian Brabandt
+"Plug 'chrisbra/vim_faq'
 Plug 'chrisbra/csv.vim'
-"
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+
+" Lamdalisue-san/Denops
+"Plug 'lambdalisue/vim-fern'
+Plug 'vim-denops/denops.vim'
+Plug 'lambdalisue/vim-gin'
+Plug 'vim-denops/denops-helloworld.vim'
+"Plug 'rhysd/vim-healthcheck'
+"Plug 'vim-skk/skkeleton'
+
+" Others
+"Plug 'vim/colorschemes'
 Plug 'ghifarit53/tokyonight-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'menisadi/kanagawa.vim'
@@ -103,36 +141,92 @@ Plug 'menisadi/kanagawa.vim'
 "Plug 'dhruvasagar/vim-table-mode'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
-"################################################################
 
-"############
-"### eskk ###
-"############
+"###########
+"### skk ###
+"###########
 if !filereadable(expand('~/.skk/SKK-JISYO.L'))
   call mkdir('~/.skk', 'p')
   call system('cd ~/.skk/ && wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && gzip -d SKK-JISYO.L.gz')
 endif
-let g:eskk#directory = "~/.skk"
-let g:eskk#dictionary = { 'path': "~/.skk/my_jisyo", 'sorted': 1, 'encoding': 'utf-8',}
-let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
-"let g:eskk#egg_like_newline = 1
-let g:eskk#immediately_dic_rw = 1
+let g:skk_jisyo = "~/.skk/my_jisyo"
+let g:skk_large_jisyo = "~/.skk/SKK-JISYO.L"
+"let g:skk_auto_save_jisyo = 1
+let g:skk_auto_save_jisyo = -1
+let g:skk_sticky_key = ';'
+"let g:skk_egg_like_newline = 1
+"let g:skk_ascii_mode_string = 'SKK:aA'
+"let g:skk_hira_mode_string = 'SKK:あ'
+"let g:skk_kata_mode_string = 'SKK:ア'
+"let g:skk_zenei_mode_string = 'SKK:Ａ'
+"let g:skk_abbrev_mode_string = 'SKK:aあ'
+let g:skk_ascii_mode_string = 'aA'
+let g:skk_hira_mode_string = 'あ'
+let g:skk_kata_mode_string = 'ア'
+let g:skk_zenei_mode_string = 'Ａ'
+let g:skk_abbrev_mode_string = 'aあ'
+"TODO: terminal modeでのskkへの対応
+
 "############
+"### eskk ###
+"############
+"if !filereadable(expand('~/.skk/SKK-JISYO.L'))
+"  call mkdir('~/.skk', 'p')
+"  call system('cd ~/.skk/ && wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && gzip -d SKK-JISYO.L.gz')
+"endif
+"let g:eskk#directory = "~/.skk"
+"let g:eskk#dictionary = { 'path': "~/.skk/my_jisyo", 'sorted': 1, 'encoding': 'utf-8',}
+"let g:eskk#large_dictionary = {'path': "~/.skk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
+""let g:eskk#egg_like_newline = 1
+"let g:eskk#immediately_dic_rw = 1
+"############
+
+"#################
+"### skkeleton ###
+"#################
+"function! s:skkeleton_init() abort
+"  if !filereadable(expand('~/.skk/SKK-JISYO.L'))
+"    call mkdir('~/.skk', 'p')
+"    call system('cd ~/.skk/ && wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && gzip -d SKK-JISYO.L.gz')
+"  endif
+"  call skkeleton#config({
+"        \ 'eggLikeNewline': v:true,
+"        \ 'globalDictionaries': ['~/.skk/SKK-JISYO.L'],
+"        \ 'userDictionary': '~/.skk/my_jisyo'
+"        \ })
+"  call skkeleton#register_kanatable('rom', {
+"        \ "z\<Space>": ["\u3000", ''],
+"        \ })
+"endfunction
+"augroup skkeleton-initialize-pre
+"  autocmd!
+"  autocmd User skkeleton-initialize-pre call s:skkeleton_init()
+"  inoremap <C-j> <Plug>(skkeleton-toggle)
+"  cnoremap <C-j> <Plug>(skkeleton-toggle)
+"  tnoremap <C-j> <Plug>(skkeleton-toggle)
+"augroup END
+
 
 "#################
 "### lightline ###
 "#################
-set laststatus=2
+"set laststatus=2
+""let g:lightline = {'colorscheme' : 'tokyonight'}
+"      \ 'colorscheme' : 'tokyonight',
+"      \ 'colorscheme' : 'kanagawa',
 let g:lightline = {
       \ 'colorscheme' : 'tokyonight',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'skkmode' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
       \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
       \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'FugitiveHead',
+      \   'skkmode': 'SkkGetModeStrAdjusted',
+      \   'gitbranch': 'FugitiveHeadAdjusted',
       \   'filename': 'LightlineFilename'
       \ }
       \ }
@@ -140,23 +234,45 @@ let g:lightline = {
 function! LightlineFilename()
   return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
 endfunction
+function! SkkGetModeStrAdjusted()
+  let s = SkkGetModeStr()
+  return s == ' ' ? '' : s
+endfunction
+function! FugitiveHeadAdjusted()
+  let s = FugitiveHead()
+  return s == '' ? '' : '⎇ ' . s
+endfunction
+
+
+"###############
+"### airline ###
+"###############
+"let g:airline_theme = "tokyonight"
 
 "###########
 "### csv ###
 "###########
 " do not allow to convert "," to "|" on the screen
 let g:csv_no_conceal = 1
-"unlet g:csv_no_conceal
 
 "################
 "### kanagawa ###
 "################
-function! KanagawaColorScheme()
-  set laststatus=2
-  silent! set termguicolors
-  silent! colorscheme kanagawa
-endfunction
-call KanagawaColorScheme()
+"function! KanagawaColorScheme()
+"  set laststatus=2
+"  silent! set termguicolors
+"  "silent! set notermguicolors
+"  silent! set background=dark
+"  silent! colorscheme kanagawa
+"endfunction
+"call KanagawaColorScheme()
+"set laststatus=2
+"set termguicolors
+"set background=dark
+colorscheme kanagawa
+
+"autocmd TerminalOpen    call KanagawaColorScheme()<cr>
+"autocmd TerminalWinOpen call KanagawaColorScheme()<cr>
 
 "############
 "### Goyo ###
@@ -166,7 +282,8 @@ function! s:goyo_enter()
 endfunction
 
 function! s:goyo_leave()
-  call KanagawaColorScheme()
+"  call KanagawaColorScheme()
+  colorscheme kanagawa
 endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -174,6 +291,7 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 let g:goyo_width = '95%'
 let g:goyo_height = '95%'
+"let g:goyo_linenr = 1
 
 nnoremap <C-w>go :Goyo<CR>
 
@@ -194,48 +312,6 @@ nnoremap <C-w>go :Goyo<CR>
 "nnoremap <leader>fc :execute 'Rg ' . expand('%:t:r')<CR>
 "" Find files in your Vim config
 "nnoremap <leader>fi :Files ~/.vim<CR>
-
-""###############
-""### vim-lsp ###
-""###############
-"if executable('pylsp')
-"  " pip install python-lsp-server
-"  au User lsp_setup call lsp#register_server({
-"    \ 'name': 'pylsp',
-"    \ 'cmd': {server_info->['pylsp']},
-"    \ 'allowlist': ['python'],
-"    \ })
-"endif
-"
-"function! s:on_lsp_buffer_enabled() abort
-"  setlocal omnifunc=lsp#complete
-"  setlocal signcolumn=yes
-"  if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-"  nmap <buffer> gd <plug>(lsp-definition)
-"  nmap <buffer> gs <plug>(lsp-document-symbol-search)
-"  nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
-"  nmap <buffer> gr <plug>(lsp-references)
-"  nmap <buffer> gi <plug>(lsp-implementation)
-"  nmap <buffer> gt <plug>(lsp-type-definition)
-"  nmap <buffer> <leader>rn <plug>(lsp-rename)
-"  nmap <buffer> [g <plug>(lsp-previous-diagnostic)
-"  nmap <buffer> ]g <plug>(lsp-next-diagnostic)
-"  nmap <buffer> K <plug>(lsp-hover)
-"  nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
-"  nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
-"
-"  let g:lsp_format_sync_timeout = 1000
-"  autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
-"
-"  " refer to doc to add more commands
-"endfunction
-"
-"augroup lsp_install
-"  au!
-"  " call s:on_lsp_buffer_enabled only for languages that has the server registered.
-"  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-"augroup END
-""###############
 
 "###########
 "### LSP ###
@@ -260,100 +336,131 @@ nnoremap <C-w>go :Goyo<CR>
 ""      \ ultisnipsSupport: v:false,
 ""      \ vsnipSupport: v:true,
 
-let lspOpts = #{autoHighlightDiag: v:true}
+"let lspOpts = #{autoHighlightDiag: v:true}
+let lspOpts = #{
+      \ autoHighlightDiag: v:true,
+      \ popupBorder: v:true,
+      \ popupBorderCodeAction: v:true,
+      \ popupBorderCompletion: v:true,
+      \ popupBorderDiag: v:true,
+      \ popupBorderHover: v:true,
+      \ popupBorderPeek: v:true,
+      \ popupBorderSignatureHelp: v:true,
+      \ popupBorderSymbolMenu: v:true,
+      \ popupBorderSymbolMenuInput: v:true,
+      \ popupBorderTypeHierarchy: v:true,
+      \}
+"let lspOpts2 = #{
+"      \ closePreviewOnComplete: v:true,
+"      \ hoverInPreview: v:false,
+"      \ completionInPreview: v:false
+"      \}
 let lspServers = []
 " for C/C++ LSP: apt install clangd
 let lspServers = add(lspServers,#{
       \ name: 'clangd',
       \ filetype: ['c', 'cpp'],
-      \ path: '/usr/bin/clangd',
+      \ path: 'clangd',
       \ args: ['--background-index']
       \})
 " for python LSP: apt install python3-pylsp
 let lspServers = add(lspServers,#{
       \	  name: 'pylsp',
       \	  filetype: ['python'],
-      \	  path: '/usr/bin/pylsp',
+      \	  path: 'pylsp',
       \	  args: []
       \})
 " for CSS: npm install --global vscode-css-languageserver-bin
 let lspServers = add(lspServers,#{
       \	  name: 'cssls',
       \	  filetype: ['css'],
-      \	  path: '/usr/bin/css-languageserver',
+      \	  path: 'css-languageserver',
       \	  args: ['--stdio']
       \})
 " for AWK: npm install -g awk-language-server
 let lspServers = add(lspServers,#{
       \	  name: 'awkls',
       \	  filetype: ['awk'],
-      \	  path: '/usr/bin/awk-language-server',
+      \	  path: 'awk-language-server',
       \	  args: []
       \})
 " for TypeScript/JavaScript: npm install -g typescript-language-server typescript
 let lspServers = add(lspServers,#{
       \	  name: 'tsserver',
       \	  filetype: ['javascript', 'typescript'],
-      \	  path: '/usr/bin/typescript-language-server',
+      \	  path: 'typescript-language-server',
       \	  args: ['--stdio']
       \})
+" for TypeScript/JavaScript: deno version
+"let lspServers = add(lspServers,#{
+"      \	  name: 'deno',
+"      \	  filetype: ['javascript', 'typescript' ],
+"      \	  path: 'deno',
+"      \	  args: ['lsp'],
+"      \   debug: v:true,
+"      \   rootSearch: ['deno.json', 'deno.jsonc'],
+"      \   initializationOptions: #{
+"      \       enable: v:true,
+"      \       lint: v:true,
+"      \       unstable: v:false
+"      \   }
+"      \})
 " for Vimscript: npm install -g vim-language-server
 let lspServers = add(lspServers,#{
       \	  name: 'vimls',
       \	  filetype: ['vim'],
-      \	  path: '/usr/bin/vim-language-server',
+      \	  path: 'vim-language-server',
       \	  args: ['--stdio']
       \})
 
-"autocmd User LspSetup call LspOptionsSet(lspOpts)
-"autocmd User LspSetup call LspAddServer(lspServers)
-"
-"nnoremap <leader>gd <cmd>LspGotoDefinition<CR>
-"nnoremap <leader>gr <cmd>LspShowReference<CR>
-"nnoremap <leader>K <cmd>LspHover<CR>
-""nnoremap K :LspHover<CR>
-"nnoremap <leader>gl <cmd>LspDiag current<CR>
-"nnoremap <leader>nd <cmd>LspDiag next \| LspDiag current<CR>
-"nnoremap <leader>pd <cmd>LspDiag prev \| LspDiag current<CR>
-"inoremap <silent> <leader><Space> <C-x><C-o>
-"nnoremap <leader>gi <cmd>LspGotoImpl<CR>
-"nnoremap <leader>gt <cmd>LspGotoTypeDef<CR>
-"nnoremap <leader>rn <cmd>LspRename<CR>
-"nnoremap <leader>ca <cmd>LspCodeAction<CR>
-"" combine with fzf
-"nnoremap <leader>ss :LspSymbolSearch<CR>
+autocmd User LspSetup call LspOptionsSet(lspOpts)
+autocmd User LspSetup call LspAddServer(lspServers)
 
-"" TAB as completion or indent based on the situation
+"-----------------------------------------------------------
+"nnoremap          <leader>K       <cmd>LspHover<cr>
+nnoremap          gK              <cmd>LspHover<cr>
+"nnoremap          <leader><C-]>   <cmd>LspGotoDefinition<cr>
+nnoremap          g<C-]>          <cmd>LspGotoDefinition<cr>
+"nnoremap          <leader>g]      <cmd>LspPeekDefinition<cr>
+"nnoremap          <leader>gq      <plug>(LspFormat)
+"xnoremap          <leader>gq      <plug>(LspFormat)
+"nnoremap <buffer> <leader>gd      <cmd>LspGotoDefinition<cr>
+"nnoremap <buffer> <leader><C-w>gd <cmd>topleft LspGotoDefinition<cr>
+"nnoremap <buffer> <leader>gd      <cmd>execute v:count .. 'LspGotoDefinition'<cr>
+"nnoremap <buffer> <leader><C-w>gd <cmd>execute 'topleft' .. v:count .. 'LspGotoDefinition'<cr>
+"nnoremap <buffer> <leader>gi      <cmd>LspGotoImpl<cr>
+"nnoremap <buffer> <leader>gt      <cmd>LspGotoTypeDef<cr>
+
+"xnoremap <silent> <leader>e       <Cmd>LspSelectionExpand<cr>
+"xnoremap <silent> <leader>s       <Cmd>LspSelectionShrink<cr>
+
+"inoremap <C-space> <C-\><C-o>:call lsp#completion#LspComplete(v:true)<cr>
+
+"nnoremap          <leader>gl      <cmd>LspDiag current<cr>
+nnoremap          gl              <cmd>LspDiag current<cr>
+"nnoremap          <leader>nd      <cmd>LspDiag next \| LspDiag current<cr>
+"nnoremap          <leader>pd      <cmd>LspDiag prev \| LspDiag current<cr>
+
+"nnoremap          <leader>rn      <cmd>LspRename<CR>
+"nnoremap          <leader>ca      <cmd>LspCodeAction<CR>
+"" combine with fzf
+"nnoremap          <leader>ss      <cmd>LspSymbolSearch<CR>
+"-----------------------------------------------------------
+
+" TAB as completion or indent based on the situation
 "inoremap <silent><expr> <Tab>
 "      \ pumvisible() ? "\<C-n>" :
 "      \ getline('.')[col('.')-1] =~ '\k' ? "\<C-x>\<C-o>" :
 "      \ "\<Tab>"
-"
-"" Shift-TAB does reverse of TAB
+
+" Shift-TAB does reverse of TAB
 "inoremap <silent><expr> <S-Tab>
 "      \ pumvisible() ? "\<C-p>" : "\<C-h>"
-"
-"" Enter as confirmation
+
+" Enter as confirmation
 "inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 
-" color of popup menu
-"hi Pmenu      ctermbg=236
-"hi PmenuSel   ctermbg=240 ctermfg=255
-"###########
-
-"#########################
-"### vsnip/vsnip-integ ###
-"#########################
-"" Jump forward or backward
-"imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-"smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-"imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-"smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-"
-"inoremap <silent><expr> <Tab>  pumvisible() ? "\<C-n>" : getline('.')[col('.')-1] =~ '\k' ? "\<C-x>\<C-o>" : "\<Tab>"
-"inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
-"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
-
+" Markdown folding
 function! s:FoldMarkdown()
   let maxfold = 3
   let line = getline(v:lnum)
