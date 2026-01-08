@@ -6,7 +6,7 @@
 filetype plugin indent on
 syntax on
 nnoremap <silent> <Esc><Esc> :nohlsearch<Enter>
-tnoremap <Esc> <C-w>N
+tnoremap <silent> <Esc> <C-w>N
 set hlsearch
 set incsearch
 "set clipboard+=unnamedplus
@@ -31,18 +31,18 @@ set laststatus=2
 "      \ 'blue(bright)', 'magenta(bright)', 'cyan(bright)', 'white(bright)' ]
 
 " kanagawa(wave) scheme
-"let g:terminal_ansi_colors = [
-"      \ "#090618", "#C34043", "#76946A", "#C0A36E",
-"      \ "#7E9CD8", "#957FB8", "#6A9589", "#C8C093",
-"      \ "#727169", "#E82424", "#98BB6C", "#E6C384",
-"      \ "#7FB4CA", "#938AA9", "#7AA89F", "#DCD7BA" ]
+let g:terminal_ansi_colors = [
+      \ "#090618", "#C34043", "#76946A", "#C0A36E",
+      \ "#7E9CD8", "#957FB8", "#6A9589", "#C8C093",
+      \ "#727169", "#E82424", "#98BB6C", "#E6C384",
+      \ "#7FB4CA", "#938AA9", "#7AA89F", "#DCD7BA" ]
 
 " terminal sexy
-let g:terminal_ansi_colors = [
-      \ '#282a2e', '#a54242', '#8c9440', '#de935f',
-      \ '#5f819d', '#85678f', '#5e8d87', '#707880',
-      \ '#373b41', '#cc6666', '#b5bd68', '#f0c674',
-      \ '#81a2be', '#b294bb', '#8abeb7', '#c5c8c6' ]
+"let g:terminal_ansi_colors = [
+"      \ '#282a2e', '#a54242', '#8c9440', '#de935f',
+"      \ '#5f819d', '#85678f', '#5e8d87', '#707880',
+"      \ '#373b41', '#cc6666', '#b5bd68', '#f0c674',
+"      \ '#81a2be', '#b294bb', '#8abeb7', '#c5c8c6' ]
 "-----------------------------------------------------------------------
 
 function! SimpleModeCommand(width, is_expand)
@@ -132,8 +132,8 @@ Plug 'vim-denops/denops-helloworld.vim'
 
 " Others
 "Plug 'vim/colorschemes'
-Plug 'ghifarit53/tokyonight-vim'
-Plug 'itchyny/lightline.vim'
+"Plug 'ghifarit53/tokyonight-vim'
+"Plug 'itchyny/lightline.vim'
 Plug 'menisadi/kanagawa.vim'
 "Plug 'godlygeek/tabular'
 "Plug 'preservim/vim-markdown'
@@ -210,39 +210,56 @@ let g:skk_abbrev_mode_string = 'aあ'
 "#################
 "### lightline ###
 "#################
-"set laststatus=2
+""set laststatus=2
 ""let g:lightline = {'colorscheme' : 'tokyonight'}
+""      \ 'colorscheme' : 'tokyonight',
+""      \ 'colorscheme' : 'kanagawa',
+"let g:lightline = {
 "      \ 'colorscheme' : 'tokyonight',
-"      \ 'colorscheme' : 'kanagawa',
-let g:lightline = {
-      \ 'colorscheme' : 'tokyonight',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'skkmode' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'lineinfo' ],
-      \              [ 'percent' ],
-      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component_function': {
-      \   'skkmode': 'SkkGetModeStrAdjusted',
-      \   'gitbranch': 'FugitiveHeadAdjusted',
-      \   'filename': 'LightlineFilename'
-      \ }
-      \ }
-
-function! LightlineFilename()
-  return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-endfunction
+"      \ 'active': {
+"      \   'left': [ [ 'mode', 'paste' ],
+"      \             [ 'skkmode' ],
+"      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+"      \   'right': [ [ 'lineinfo' ],
+"      \              [ 'percent' ],
+"      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+"      \ },
+"      \ 'component_function': {
+"      \   'skkmode': 'SkkGetModeStrAdjusted',
+"      \   'gitbranch': 'FugitiveHeadAdjusted',
+"      \   'filename': 'LightlineFilename'
+"      \ }
+"      \ }
+"
+"function! LightlineFilename()
+"  return expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+"endfunction
 function! SkkGetModeStrAdjusted()
-  let s = SkkGetModeStr()
+  let s = exists('*SkkGetModeStr') ? SkkGetModeStr() : ' '
   return s == ' ' ? '' : s
 endfunction
 function! FugitiveHeadAdjusted()
-  let s = FugitiveHead()
+  let s = exists('*FugitiveHead') ? FugitiveHead() : ''
   return s == '' ? '' : '⎇ ' . s
 endfunction
+function! FugitiveHeadAdjusted2()
+  let s = FugitiveHeadAdjusted()
+  return s == '' ? '' : '[' . s . ']'
+endfunction
 
+
+"###################################
+"### custom statusline by myself ###
+"###################################
+" default status line?
+"set statusline=%<%f\ %h%w%m%r%=%-14.(%l,%c%V%)\ %P
+
+"set statusline=%<%f\ %{%FugitiveHeadAdjusted2()%}%h%w%m%r%=%-14.(%l/%L,%c%V%)\ %P
+set statusline=%<%f\ %{%SkkGetModeStrAdjusted()%}%{%FugitiveHeadAdjusted2()%}%h%w%m%r%=%-14.(%l/%L,%c%V%)\ %P
+" '-14.(' means as follows:
+"   '-'   : left justify
+"   '14.' : minimum width = 14, and maximum width is not specified
+"   '('   : start of the item group, and must be followed by '%)' somewhere
 
 "###############
 "### airline ###
@@ -258,21 +275,22 @@ let g:csv_no_conceal = 1
 "################
 "### kanagawa ###
 "################
-"function! KanagawaColorScheme()
-"  set laststatus=2
-"  silent! set termguicolors
-"  "silent! set notermguicolors
-"  silent! set background=dark
-"  silent! colorscheme kanagawa
-"endfunction
-"call KanagawaColorScheme()
-"set laststatus=2
-"set termguicolors
-"set background=dark
-colorscheme kanagawa
-
-"autocmd TerminalOpen    call KanagawaColorScheme()<cr>
-"autocmd TerminalWinOpen call KanagawaColorScheme()<cr>
+function ColorschemeKanagawa()
+  if !exists('g:kanagawa_not_available')
+    try 
+      colorscheme kanagawa
+      highlight StatusLine   gui=NONE term=NONE cterm=NONE guibg=#c8c093 guifg=#16161d ctermbg=NONE ctermfg=NONE
+      highlight StatusLineNC gui=NONE term=NONE cterm=NONE guibg=#54546d guifg=#16161d ctermbg=NONE ctermfg=NONE
+      "highlight! link StatusLineTerm StatusLine
+      highlight! link StatusLineTermNC StatusLineNC
+      highlight StatusLineTerm   gui=NONE term=NONE cterm=NONE guibg=#7fb4ca guifg=#16161d ctermbg=NONE ctermfg=NONE
+      "highlight StatusLineTermNC gui=NONE term=NONE cterm=NONE guibg=#54546d guifg=#16161d ctermbg=NONE ctermfg=NONE
+    catch /^Vim\%((\a\+)\)\=:E185/
+      let g:kanagawa_not_available = 1 
+    endtry
+  endif
+endfunction
+call ColorschemeKanagawa()
 
 "############
 "### Goyo ###
@@ -282,8 +300,7 @@ function! s:goyo_enter()
 endfunction
 
 function! s:goyo_leave()
-"  call KanagawaColorScheme()
-  colorscheme kanagawa
+  call ColorschemeKanagawa()
 endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -340,16 +357,17 @@ nnoremap <C-w>go :Goyo<CR>
 let lspOpts = #{
       \ autoHighlightDiag: v:true,
       \ popupBorder: v:true,
-      \ popupBorderCodeAction: v:true,
-      \ popupBorderCompletion: v:true,
-      \ popupBorderDiag: v:true,
-      \ popupBorderHover: v:true,
-      \ popupBorderPeek: v:true,
-      \ popupBorderSignatureHelp: v:true,
-      \ popupBorderSymbolMenu: v:true,
-      \ popupBorderSymbolMenuInput: v:true,
-      \ popupBorderTypeHierarchy: v:true,
       \}
+"      \ popupBorderCodeAction: v:true,
+"      \ popupBorderCompletion: v:true,
+"      \ popupBorderDiag: v:true,
+"      \ popupBorderHover: v:true,
+"      \ popupBorderPeek: v:true,
+"      \ popupBorderSignatureHelp: v:true,
+"      \ popupBorderSymbolMenu: v:true,
+"      \ popupBorderSymbolMenuInput: v:true,
+"      \ popupBorderTypeHierarchy: v:true,
+"      \}
 "let lspOpts2 = #{
 "      \ closePreviewOnComplete: v:true,
 "      \ hoverInPreview: v:false,
@@ -448,17 +466,17 @@ nnoremap          gl              <cmd>LspDiag current<cr>
 "-----------------------------------------------------------
 
 " TAB as completion or indent based on the situation
-"inoremap <silent><expr> <Tab>
-"      \ pumvisible() ? "\<C-n>" :
-"      \ getline('.')[col('.')-1] =~ '\k' ? "\<C-x>\<C-o>" :
-"      \ "\<Tab>"
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ getline('.')[col('.')-1] =~ '\k' ? "\<C-x>\<C-o>" :
+      \ "\<Tab>"
 
 " Shift-TAB does reverse of TAB
-"inoremap <silent><expr> <S-Tab>
-"      \ pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <silent><expr> <S-Tab>
+      \ pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Enter as confirmation
-"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 
 " Markdown folding
 function! s:FoldMarkdown()
