@@ -4,8 +4,26 @@ require("config.lazy")
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.modeline = true
-vim.opt.shell = 'bash'
+--vim.opt.shell = 'bash'
+--vim.opt.shell = vim.fn.exepath('bash')
 vim.opt.laststatus = 2
+
+--vim.opt.number = true
+--vim.opt.relativenumber = true
+
+--vim.opt.ignorecase = true
+--vim.opt.smartcase = true
+--vim.opt.splitbelow = true
+--vim.opt.splitright = true
+--vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 250
+vim.opt.undofile = true
+--vim.opt.clipboard = "unnamedplus"
+
+--vim.opt.tabstop = 4
+--vim.opt.shiftwidth = 4
+--vim.opt.expandtab = true
 
 vim.keymap.set('n', '<Esc><Esc>', '<cmd>nohlsearch<cr>')
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')

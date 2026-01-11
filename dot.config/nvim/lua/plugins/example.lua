@@ -102,6 +102,8 @@ return {
     config = function()
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
+      vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file tree" })
+      vim.keymap.set("n", "<leader>o", "<cmd>NvimTreeFocus<cr>", { desc = "Focus file tree" })
       require('nvim-tree').setup({
         sort = {
           sorter = "case_sensitive",
@@ -138,6 +140,52 @@ return {
     end
   },
   {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("which-key").setup()
+    end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+--    build = ":TSUpdate",
+--    config = function()
+--      require("nvim-treesitter.configs").setup({
+--        ensure_installed = { "lua", "vim", "vimdoc", "python", "javascript" },
+--        highlight = { enable = true },
+--        indent = { enable = true },
+--      })
+--    end,
+    config = function()
+      require("nvim-treesitter").setup({})
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
+    config = function()
+      local lspconfig = require("lspconfig")
+      -- Add language servers you use, e.g.:
+      -- lspconfig.lua_ls.setup({})
+      -- lspconfig.pyright.setup({})
+      -- lspconfig.ts_ls.setup({})
+    end,
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+--      "L3MON4D3/LuaSnip",
+    },
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+      { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+      { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+    },
   }
 }
