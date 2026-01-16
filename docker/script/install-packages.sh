@@ -1,6 +1,8 @@
 #!/bin/sh
+set -euo pipefail
 
-sudo apt install build-essential unzip
+sudo apt update
+sudo apt install -y build-essential unzip
 
 if [ ! -f ~/.vim/autoload/plug.vim ]; then
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
@@ -14,7 +16,7 @@ fi
 
 result=$(grep -E "^# DENO setting" ~/.bashrc)
 if [ -z "$result" ]; then
-	curl -fsSL https://deno.land/x/install/install.sh | sh \
+	curl -fsSL https://deno.land/x/install/install.sh | DEBIAN_FRONTEND=noninteractive sh \
 		&& echo '' >> ~/.bashrc \
 		&& echo '# DENO setting' >> ~/.bashrc \
 		&& echo 'export DENO_INSTALL="/home/${USERNAME}/.deno"' >> ~/.bashrc \
