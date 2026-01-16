@@ -28,7 +28,7 @@ fi
 
 result=$(grep -E "^# DENO setting" ~/.bashrc)
 if [ -z "$result" ]; then
-	curl -fsSL https://deno.land/x/install/install.sh | DEBIAN_FRONTEND=noninteractive sh \
+	curl -fsSL https://deno.land/x/install/install.sh | sh -s -- -y --no-modify-path \
 		&& echo '' >> ~/.bashrc \
 		&& echo '# DENO setting' >> ~/.bashrc \
 		&& echo 'export DENO_INSTALL="${HOME}/.deno"' >> ~/.bashrc \
@@ -45,6 +45,8 @@ if [ -z "$result" ]; then
 		&& echo 'export NPM_CONFIG_PREFIX=${HOME}/.node' >> ~/.bashrc \
 		&& echo 'export PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"' >> ~/.bashrc \
 		&& export NPM_CONFIG_PREFIX=${HOME}/.node \
+		&& export CC=clang \
+		&& export CXX=clang++ \
 		&& npm install -g aws-cdk typescript awk-language-server \
 				  bash-language-server vscode-css-languageserver-bin \
 				  typescript-language-server vim-language-server \
