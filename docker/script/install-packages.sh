@@ -24,8 +24,8 @@ fi
 ## Node.js and aws-cdk install
 result=$(grep -E "^# NODE setting" ~/.bashrc)
 if [ -z "$result" ]; then
-	curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && \
-		sudo apt install nodejs && \
+	curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - \
+		&& DEBIAN_FRONTEND=noninteractive sudo apt install nodejs \
 		&& echo '' >> ~/.bashrc \
 		&& echo '# NODE setting' >> ~/.bashrc \
 		&& echo 'export NPM_CONFIG_PREFIX=${HOME}/.node' >> ~/.bashrc \
