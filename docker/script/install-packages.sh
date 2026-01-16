@@ -30,6 +30,7 @@ if [ -z "$result" ]; then
 		&& echo '# NODE setting' >> ~/.bashrc \
 		&& echo 'export NPM_CONFIG_PREFIX=${HOME}/.node' >> ~/.bashrc \
 		&& echo 'export PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"' >> ~/.bashrc \
+		&& export NPM_CONFIG_PREFIX=${HOME}/.node \
 		&& npm install -g aws-cdk typescript awk-language-server \
 				  bash-language-server vscode-css-languageserver-bin \
 				  typescript-language-server vim-language-server \
