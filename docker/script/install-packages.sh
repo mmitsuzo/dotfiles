@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sudo apt install unzip
+sudo apt install build-essential unzip
 
 if [ ! -f ~/.vim/autoload/plug.vim ]; then
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
