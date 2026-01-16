@@ -47,10 +47,11 @@ if [ -z "$result" ]; then
 		&& export NPM_CONFIG_PREFIX=${HOME}/.node \
 		&& export CC=clang \
 		&& export CXX=clang++ \
-		&& npm install -g aws-cdk typescript awk-language-server \
-				  bash-language-server vscode-css-languageserver-bin \
-				  typescript-language-server vim-language-server \
-				  @google/gemini-cli
+		&& npm install --loglevel verbose -g \
+			aws-cdk typescript awk-language-server \
+			bash-language-server vscode-css-languageserver-bin \
+			typescript-language-server vim-language-server \
+			@google/gemini-cli
 fi
 
 ## Gemini setting
