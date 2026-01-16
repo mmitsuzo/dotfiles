@@ -31,8 +31,8 @@ if [ -z "$result" ]; then
 	curl -fsSL https://deno.land/x/install/install.sh | DEBIAN_FRONTEND=noninteractive sh \
 		&& echo '' >> ~/.bashrc \
 		&& echo '# DENO setting' >> ~/.bashrc \
-		&& echo 'export DENO_INSTALL="/home/${USERNAME}/.deno"' >> ~/.bashrc \
-		&& echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> ~/.bashrc
+		&& echo 'export DENO_INSTALL="${HOME}/.deno"' >> ~/.bashrc \
+		&& echo 'export PATH="${DENO_INSTALL}/bin:${PATH}"' >> ~/.bashrc
 fi
 
 ## Node.js and aws-cdk install
@@ -52,8 +52,9 @@ if [ -z "$result" ]; then
 fi
 
 ## Gemini setting
-result=$(grep -E "^# export NO_BROWSER" ~/.bashrc)
+result=$(grep -E "^# Gemini setting" ~/.bashrc)
 if [ -z "$result" ]; then
 	echo '' >> ~/.bashrc
+	echo '# Gemini setting' >> ~/.bashrc
 	echo 'export NO_BROWSER=true' >> ~/.bashrc
 fi
