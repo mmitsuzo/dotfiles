@@ -162,13 +162,14 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    config = function()
-      local lspconfig = require("lspconfig")
-      -- Add language servers you use, e.g.:
-      -- lspconfig.lua_ls.setup({})
-      -- lspconfig.pyright.setup({})
-      -- lspconfig.ts_ls.setup({})
-    end,
+    --config = function()
+    --  local lspconfig = require("lspconfig")
+    --  -- Add language servers you use, e.g.:
+    --  -- lspconfig.lua_ls.setup({})
+    --  -- lspconfig.pyright.setup({})
+    --  -- lspconfig.ts_ls.setup({})
+    --end,
+    event = { "BufReadPre", "BufNewFile" },
   },
   {
     "hrsh7th/nvim-cmp",
@@ -177,7 +178,29 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
 --      "L3MON4D3/LuaSnip",
+      "hrsh7th/cmp-vsnip",
+      "hrsh7th/vim-vsnip",
     },
+    config = function()
+      local cmp = require("cmp")
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body)
+          end,
+        },
+
+        --mapping = cmp.mapping.preset.insert({
+        --  ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        --}),
+
+        sources = {
+          { name = "nvim_lsp" },
+          { name = "vsnip" },
+        },
+      })
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",

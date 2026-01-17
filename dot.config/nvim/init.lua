@@ -1,5 +1,6 @@
 -- vim: set ts=2 sw=2 sts=2 et:
 require("config.lazy")
+require("config.lsp")
 
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
@@ -24,6 +25,8 @@ vim.opt.undofile = true
 --vim.opt.tabstop = 4
 --vim.opt.shiftwidth = 4
 --vim.opt.expandtab = true
+
+vim.opt.winborder = "rounded"
 
 vim.keymap.set('n', '<Esc><Esc>', '<cmd>nohlsearch<cr>')
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
@@ -73,4 +76,5 @@ vim.api.nvim_create_user_command('T8i', function() insert_modeline(8, true) end,
 vim.api.nvim_create_user_command('TT2i', function() insert_modeline(2, false) end, {})
 vim.api.nvim_create_user_command('TT4i', function() insert_modeline(4, false) end, {})
 vim.api.nvim_create_user_command('TT8i', function() insert_modeline(8, false) end, {})
+
 
