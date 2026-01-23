@@ -4,8 +4,13 @@
 result=$(grep -E "^# NODE setting" ~/.bashrc)
 if [ -z "$result" ]; then
 
-	curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - \
-		&& sudo apt install -y nodejs
+	if command -v apt > /dev/null 2>&1; then
+		curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - \
+			&& sudo apt install -y nodejs
+	elif command -v yum > /dev/null 2>&1; then
+		curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo -E bash - \
+			&& sudo yum install -y nodejs
+	fi
 
 	echo '' >> ~/.bashrc
 	echo '# NODE setting' >> ~/.bashrc
