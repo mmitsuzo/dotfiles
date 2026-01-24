@@ -130,6 +130,7 @@ if !filereadable(expand('~/.skk/SKK-JISYO.L'))
 endif
 let g:skk_jisyo = "~/.skk/my_jisyo"
 let g:skk_large_jisyo = "~/.skk/SKK-JISYO.L"
+"let g:skk_large_jisyo_encoding = "euc-jp"
 "let g:skk_auto_save_jisyo = 1
 let g:skk_auto_save_jisyo = -1
 let g:skk_sticky_key = ';'
@@ -404,12 +405,14 @@ let lspServers = add(lspServers,#{
       \ args: ['--background-index']
       \})
 " for python LSP: apt install python3-pylsp
-let lspServers = add(lspServers,#{
-      \	  name: 'pylsp',
-      \	  filetype: ['python'],
-      \	  path: 'pylsp',
-      \	  args: []
-      \})
+if executable('pylsp')
+  let lspServers = add(lspServers,#{
+        \	  name: 'pylsp',
+        \	  filetype: ['python'],
+        \	  path: 'pylsp',
+        \	  args: []
+        \})
+endif
 " for CSS: npm install --global vscode-css-languageserver-bin
 let lspServers = add(lspServers,#{
       \	  name: 'cssls',
