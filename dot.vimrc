@@ -21,6 +21,23 @@ set modeline
 set shell=bash
 set laststatus=2
 
+"let &t_SH = "\e[2 q" "SH: cursor shape?
+"let &t_EI = "\e[2 q" "EI: normal mode
+let &t_SH = "\e[1 q" "SH: cursor shape?
+let &t_EI = "\e[1 q" "EI: normal mode
+let &t_SI = "\e[5 q" "SI: insert mode
+let &t_SR = "\e[3 q" "SR: replace mode
+let &t_VS = "\e[1 q" "VS: visual mode
+"let &t_ti = "\e[1 q" "EI: normal mode
+"let &t_te = "\e[0 q" "EI: normal mode
+"	definition
+"	0, 1 or none	blinking block cursor
+"	2		block cursor
+"	3		blinking underline cursor
+"	4		underline cursor
+"	5		blinking vertical bar cursor
+"	6		vertical bar cursor
+
 
 function! SimpleModeCommand(width, is_expand)
   "set ts=n sw=n sts=n et (or noet)
@@ -125,7 +142,7 @@ call plug#end()
 "### skk ###
 "###########
 if !filereadable(expand('~/.skk/SKK-JISYO.L'))
-  call mkdir('~/.skk', 'p')
+  call mkdir(expand('~/.skk'), 'p')
   call system('cd ~/.skk/ && wget http://openlab.jp/skk/dic/SKK-JISYO.L.gz && gzip -d SKK-JISYO.L.gz')
 endif
 let g:skk_jisyo = "~/.skk/my_jisyo"
