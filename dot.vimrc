@@ -102,6 +102,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 "Plug 'junegunn/limelight.vim'
+Plug 'junegunn/gv.vim'
 
 " LSP
 Plug 'yegappan/lsp'
@@ -472,6 +473,13 @@ let lspServers = add(lspServers,#{
       \	  path: 'vim-language-server',
       \	  args: ['--stdio']
       \})
+" for YAML: npm install -g yaml-language-server
+let lspServers = add(lspServers,#{
+      \	  name: 'yamlls',
+      \	  filetype: ['yaml'],
+      \	  path: 'yaml-language-server',
+      \	  args: ['--stdio']
+      \})
 
 autocmd User LspSetup call LspOptionsSet(lspOpts)
 autocmd User LspSetup call LspAddServer(lspServers)
@@ -531,5 +539,5 @@ function! s:FoldMarkdown()
   endfor
   return '='
 endfunction
-autocmd FileType markdown setlocal foldmethod=expr foldexpr=<SID>FoldMarkdown()
+"autocmd FileType markdown setlocal foldmethod=expr foldexpr=<SID>FoldMarkdown()
 
