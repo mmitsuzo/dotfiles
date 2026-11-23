@@ -1,0 +1,9 @@
+# this script need to be read from ${HOME}/.bashrc using source or '.' command
+
+LOCALBIN=${HOME}/.local/bin"
+if [ -d "${LOCALBIN}" ]; then
+	if ! (echo "${PATH}" | tr ':' '\n' | grep -q "${LOCALBIN}"); then
+		export PATH="${PATH}:${LOCALBIN}"
+	fi
+fi
+
