@@ -1,12 +1,24 @@
 #!/bin/sh
 
-workdir=$(dirname $0)
-for df in $(ls ${workdir} | grep ^dot)
+for src in $(git ls-files | grep '^dot\.')
 do
 
-	dstpath=$(echo $df | sed -e 's/^dot//')
-	echo "execute: cp -rT ${workdir}/${df} ~/${dstpath}"
-	cp -rT ${workdir}/${df} ~/${dstpath}
+	f=$(echo "${src}" | sed 's/^dot//')
+	d=$(dirname "${f}")
+	dstf="${HOME}/${f}"
+	dstd="${HOME}/${d}"
+
+	if [ ! -d "${dstd}" ]; then
+		mkdir -p "${dstd}"
+		echo "created: ${dstd}/"
+	fi
+
+	if [ -f "${dstf}" ]; then
+		echo "skipped: ${src} -> ${dstf} (already exists)" # 1>&2
+	else
+		cp "${src}" "${dstf}"
+		echo "copied:  ${src} -> ${dstf}"
+	fi
 
 done
 
