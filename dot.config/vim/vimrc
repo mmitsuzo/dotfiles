@@ -81,7 +81,7 @@ autocmd FileType qf nnoremap <buffer> K k<CR>zz<C-w>p
 "autocmd FileType qf setlocal statusline+=\ %L
 
 " Plugins will be downloaded under the specified directory.
-call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.config/vim/plugged')
 " Declare the list of plugins.
 
 " mmitsuzo

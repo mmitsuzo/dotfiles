@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # prepare Vim plugin manager
-if [ ! -f ~/.vim/autoload/plug.vim ]; then
-	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+if [ ! -f ~/.config/vim/autoload/plug.vim ]; then
+	curl -fLo ~/.config/vim/autoload/plug.vim --create-dirs \
 		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
