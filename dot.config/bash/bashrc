@@ -2,6 +2,7 @@
 
 export LANG=en_US.UTF-8
 
+# add local PATHs
 for dir in \
 	"${HOME}/.local/bin" \
 	"${HOME}/.local/src/node-v26.13.1-win-x64"
@@ -9,15 +10,11 @@ do
 	if [ -d "${dir}" ]; then
 		case ":${PATH}:" in
 			*":${dir}:"*)
-#				echo "${dir} exists in PATH"
 				;;
 			*)
-#				echo "add ${dir} to PATH"
 				PATH="${PATH}:${dir}"
 				;;
 		esac
-#	else
-#		echo "${dir} dir doesn't exist"
 	fi
 done
 export PATH
