@@ -2,8 +2,10 @@
 
 ## config files
 
+- `~/.bashrc`
+  - just read `~/.config/bash/bashrc`
+- `~/.config/bash/bashrc`
 - `~/.config/vim/vimrc`
-- `~/.config/bash/bashrc` (need to be read from `~/.bashrc`)
 
 ## scripts
 
