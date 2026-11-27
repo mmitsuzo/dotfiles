@@ -5,6 +5,8 @@ export LANG=en_US.UTF-8
 # add local PATHs
 for dir in \
 	"${HOME}/.local/bin" \
+	"${HOME}/.local/src/go/bin" \
+	"${HOME}/.local/src/nvim-win64/bin" \
 	"${HOME}/.local/src/node-v26.13.1-win-x64"
 do
 	if [ -d "${dir}" ]; then
