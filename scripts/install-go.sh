@@ -1,7 +1,8 @@
 #!/bin/sh
 
 SRCDIR="${HOME}/.local/src"
-TARGET="go1.27.4.windows-amd64.zip"
+VERSION="1.27.4"
+TARGET="go${VERSION}.windows-amd64.zip"
 ZIPURL="https://go.dev/dl/${TARGET}"
 ZIPFILE="${SRCDIR}/${TARGET}"
 
