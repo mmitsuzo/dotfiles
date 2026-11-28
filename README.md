@@ -11,10 +11,8 @@
 
 - `scripts/install.sh`
     - install config files
-- `scripts/setup-vim.sh`
-    - install external tools required by vim
-        - plugin manager
-        - skk dictionary
+- `scripts/install-*.sh`
+    - install programs (windows environment assumed)
 - `scripts/setup-git-bash-win.sh`
     - set windows-specific config/environment
 
